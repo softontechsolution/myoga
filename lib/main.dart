@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myoga/utils/themes/theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,62 +8,41 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      theme: MyOgaTheme.lightTheme,
+      darkTheme: MyOgaTheme.darkTheme,
+      themeMode: ThemeMode.system,
+      home: const MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+      appBar: AppBar(title: Text("My OGA"),leading: Icon(Icons.ondemand_video_rounded),),
+      floatingActionButton: FloatingActionButton(onPressed: () {}, child: Icon(Icons.add_shopping_cart_rounded),),
+      body: Padding(
+        padding: EdgeInsets.all(20.0),
+        child: ListView(
+          children: [
+            Text("Welcome", style: Theme.of(context).textTheme.headline2,),
+            Text("My Oga", style: Theme.of(context).textTheme.subtitle1,),
+            Text("I'm Available, Send Me", style: Theme.of(context).textTheme.bodyText1,),
+            ElevatedButton(onPressed: () {}, child: Text("Book Now"),),
+            OutlinedButton(onPressed: () {}, child: Text("Book Later"),),
+            Padding(padding: EdgeInsets.all(20.0),
+              child: Image(image: AssetImage("assets/images/myogaIcon3.png"),),
+            )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
 }
