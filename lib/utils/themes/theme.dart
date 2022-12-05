@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:myoga/utils/themes/widget_themes/text_theme.dart';
 
+import 'widget_themes/elevated_button_theme.dart';
+import 'widget_themes/outlined_button_theme.dart';
+import 'widget_themes/text_field_theme.dart';
+
 class MyOgaTheme {
   MyOgaTheme._();
 
@@ -19,10 +23,16 @@ class MyOgaTheme {
       900: Color(0xFFCEC3FD),
     }),
     textTheme: MyOgaTextTheme.lightTextTheme,
+    outlinedButtonTheme: MyOgaOutlinedButtonTheme.lightOutlinedButtonTheme,
+    elevatedButtonTheme: MyOgaElevatedButtonTheme.lightElevatedButtonTheme,
+    inputDecorationTheme: moTextFormFieldTheme.lightInputDecorationTheme,
   );
 
   static ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     textTheme: MyOgaTextTheme.darkTextTheme,
+    outlinedButtonTheme: MyOgaOutlinedButtonTheme.darkOutlinedButtonTheme,
+    elevatedButtonTheme: MyOgaElevatedButtonTheme.darkElevatedButtonTheme,
+    inputDecorationTheme: moTextFormFieldTheme.darkInputDecorationTheme,
   );
 }

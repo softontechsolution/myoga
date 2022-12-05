@@ -15,5 +15,39 @@ const String moOnBoardingCounter2 = "2/3";
 const String moOnBoardingCounter3 = "3/3";
 
 // Welcome Screen Text
-const String pWelcomeTitle = "Take control of your \nFinances today, Link your funds for \nEase and Convenience.";
-const String pWelcomeSubtitle = "Easy. Fast. Secure.";
+const String moWelcomeTitle = "Send your parcels using MY OGA";
+const String moWelcomeSubtitle = "Easy. Fast. Secure.";
+
+//Login Screen Text
+const String moWelcomeBack = "Welcome Back";
+const String moWelcomeBackTagline = "Got any deliveries to make? Send Me.";
+const String moEmail = "Email";
+const String moPassword = "Password";
+const String moDontHaveAccount = "Don't have account yet?";
+const String moForgetPassword = "Forget Password";
+const String moGoogleSignIn = "Sign in with Google";
+
+// Sign Up Screen Text
+const String moSignupTitle = "Get on Board";
+const String moSignupSubtitle = "with just a click";
+const String moAlreadyHaveAccount = "Already have an Account?";
+const String moFullName = "Full Name";
+const String moRepeatPassword = "Repeat Password";
+
+// Forget Password Text
+const String moPhone = "Phone";
+const String moNext = "Next";
+const String moForgetPasswordTitle = "Make Selection!";
+const String moForgetPasswordSubtitle = "Select one of the options given below to reset your password.";
+const String moResetViaEmail = "Reset Via E-Mail Verification.";
+const String moResetViaPhone = "Reset Via Phone Verification.";
+const String moForgetPhoneSubtitle = "Enter your registered Phone number to receive OTP.";
+const String moForgetEmailSubtitle = "Enter your registered Email to receive OTP.";
+
+// Forget Password OTP Text
+const String moOtpTitle = "Verification";
+const String moOtpSubTitle = "Enter the code sent to ";
+const String moOtpVerify = "Verify";
+
+
+

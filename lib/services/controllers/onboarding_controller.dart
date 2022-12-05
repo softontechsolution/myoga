@@ -38,7 +38,7 @@ class OnBoardingController extends GetxController{
   ];
 
   onPageChangedCallback(int activePageIndex) => currentPage.value = activePageIndex;
-  skip() => controller.jumpToPage(page: 3);
+  skip() => controller.jumpToPage(page: 2);
   animateToNextSlide() {
     int nextPage = controller.currentPage + 1;
     controller.animateToPage(page: nextPage);

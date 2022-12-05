@@ -8,5 +8,9 @@ const String moOnboardImg2 = "assets/images/onboardingtwo.png";
 const String moOnboardImg3 = "assets/images/onboardingthree.png";
 
 // Welcome Screen Image
-const String pWelcomeImg = "assets/images/welcome.png";
-const String pWelcomeLogo = "assets/images/paylogo.png";
+const String moWelcomeImg = "assets/images/welcome.png";
+const String moWelcomeLogo = "assets/images/myogaIcon3.png";
+
+//login Screen Image
+const String moGoogleLogo = "assets/icons/google.png";
+const String moLoginImage = "assets/images/myogaIcon1.png";
