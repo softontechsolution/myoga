@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../constants/texts_string.dart';
+import '../Login/login_screen.dart';
 
 class SignupFormWidget extends StatelessWidget {
   const SignupFormWidget({
@@ -42,7 +44,7 @@ class SignupFormWidget extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () { Get.to(() => const LoginScreen()); },
                 child: Text(moSignup.toUpperCase()),
               ),
             ),

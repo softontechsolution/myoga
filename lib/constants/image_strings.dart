@@ -14,3 +14,12 @@ const String moWelcomeLogo = "assets/images/myogaIcon3.png";
 //login Screen Image
 const String moGoogleLogo = "assets/icons/google.png";
 const String moLoginImage = "assets/images/myogaIcon1.png";
+
+//Banner Images
+const String moBannerOne = "assets/images/banner1.png";
+const String moBannerTwo = "assets/images/banner2.png";
+const String moBannerThree = "assets/images/banner3.png";
+const String moBannerFour = "assets/images/banner4.png";
+const String moBannerFive = "assets/images/banner5.png";
+const String moBannerSix = "assets/images/banner6.png";
+const String moBookmark = "assets/icons/bookmark.png";
