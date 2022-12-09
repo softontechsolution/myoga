@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "762957034592",
+    "firebase_url": "https://myoga-80daa-default-rtdb.firebaseio.com",
     "project_id": "myoga-80daa",
     "storage_bucket": "myoga-80daa.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "762957034592-92ki6mlm0e964h9qn1pdff68cp1hrd0q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.myoga.myoga",
+            "certificate_hash": "05c02c3062a524d985b0e120db9cd2f337d1a043"
+          }
+        },
         {
           "client_id": "762957034592-7reb0njh0oekgokpgq8vqkle0vhnultv.apps.googleusercontent.com",
           "client_type": 3
@@ -29,6 +38,13 @@
             {
               "client_id": "762957034592-7reb0njh0oekgokpgq8vqkle0vhnultv.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "762957034592-ro1f81oft238tc4psnsf5tdo1rbl9ro8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.myoga.myoga"
+              }
             }
           ]
         }

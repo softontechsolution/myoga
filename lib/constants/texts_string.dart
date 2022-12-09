@@ -47,6 +47,7 @@ const String moForgetEmailSubtitle = "Enter your registered Email to receive OTP
 // Forget Password OTP Text
 const String moOtpTitle = "Verification";
 const String moOtpSubTitle = "Enter the code sent to ";
+const String moPhoneSubTitle = "Verify your phone number.";
 const String moOtpVerify = "Verify";
 
 
