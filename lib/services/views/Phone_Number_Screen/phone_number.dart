@@ -19,9 +19,10 @@ class PhoneNumberScreen extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(30.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: const [
                 FormHeaderWidget(
-                  image: moLoginImage,
+                  image: moWelcomeLogo, imageHeight: 20.0,
                   title: moOtpTitle,
                   subtitle: moPhoneSubTitle,
                 ),

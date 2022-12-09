@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myoga/repositories/authentication_repository/authentication_repository.dart';
+import 'package:myoga/services/controllers/otp_controller.dart';
 import 'package:myoga/utils/themes/theme.dart';
 import 'firebase_options.dart';
 import 'services/views/splash_screen/splash_screen.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final otpController = Get.put(OTPController());
     return GetMaterialApp(
       theme: MyOgaTheme.lightTheme,
       darkTheme: MyOgaTheme.darkTheme,
