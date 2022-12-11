@@ -5,6 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/image_strings.dart';
 import '../../../../repositories/authentication_repository/authentication_repository.dart';
+import '../../Profile/profile_screen.dart';
 
 class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
   const DashboardAppBar({
@@ -28,7 +29,7 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0), color: PCardBgColor),
           child: IconButton(onPressed: () {
-            AuthenticationRepository.instance.logout();
+            Get.to(() => const ProfileScreen());
           }, icon: const Icon(Icons.menu)),
         )
       ],

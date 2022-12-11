@@ -50,5 +50,24 @@ const String moOtpSubTitle = "Enter the code sent to ";
 const String moPhoneSubTitle = "Verify your phone number.";
 const String moOtpVerify = "Verify";
 
+//Profile texts
+const String moProfile = "Profile";
+const String moEditProfile = "Edit Profile";
+const String moLogoutDialog = "Logout";
+const String moProfileHeading = "Joshua Emmanuel";
+const String moProfileSubheading = "myemailaddress@gmail.com";
+
+//Profile Menu Texts
+const String moMenu1 = "Information";
+const String moMenu2 = "My Orders";
+const String moMenu3 = "Settings";
+const String moMenu4 = "Logout";
+const String moMenu5 = "My Wallet";
+
+//Update Profile Text
+const String moDelete = "Delete";
+const String moJoined = "Joined";
+const String moJoinAt = "31 January 2023";
+
 
 
