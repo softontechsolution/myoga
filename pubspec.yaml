@@ -24,6 +24,7 @@ dependencies:
   smooth_page_indicator: ^1.0.0+2
   flutter_otp_text_field: ^1.1.1
   otp_timer_button: ^1.1.0
+  line_awesome_flutter: ^2.0.0
 
 
 dev_dependencies:

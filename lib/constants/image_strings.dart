@@ -23,3 +23,6 @@ const String moBannerFour = "assets/images/banner4.png";
 const String moBannerFive = "assets/images/banner5.png";
 const String moBannerSix = "assets/images/banner6.png";
 const String moBookmark = "assets/icons/bookmark.png";
+
+// Profile Images
+const String moProfilePic = "assets/images/profile-pic.jpeg";
