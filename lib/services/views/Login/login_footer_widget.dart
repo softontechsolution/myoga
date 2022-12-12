@@ -16,7 +16,7 @@ class LoginFooterWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text("OR"),
+        const Text("OR"),
         const SizedBox(
           height: 5.0,
         ),
@@ -28,7 +28,7 @@ class LoginFooterWidget extends StatelessWidget {
               width: 20.0,
             ),
             onPressed: () {},
-            label: Text(moGoogleSignIn),
+            label: const Text(moGoogleSignIn),
           ),
         ),
         const SizedBox(
