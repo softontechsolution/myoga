@@ -26,3 +26,12 @@ const String moBookmark = "assets/icons/bookmark.png";
 
 // Profile Images
 const String moProfilePic = "assets/images/profile-pic.jpeg";
+
+// Pick Address Images
+const String moPickupPic ="assets/images/Pickupicon.png";
+const String moPickupPicWhite ="assets/images/PickupiconWhite.png";
+
+// Select Ride Images
+const String moBox ="assets/images/box.png";
+const String moCar ="assets/images/car.png";
+const String moMotor ="assets/images/motorbike.png";

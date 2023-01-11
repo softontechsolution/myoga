@@ -27,7 +27,7 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
         Container(
           margin: const EdgeInsets.only(right: 20.0, top: 7.0),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0), color: PCardBgColor),
+              borderRadius: BorderRadius.circular(10.0),),
           child: IconButton(onPressed: () {
             Get.to(() => const ProfileScreen());
           }, icon: const Icon(Icons.menu)),

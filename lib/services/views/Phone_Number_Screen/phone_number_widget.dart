@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../constants/texts_string.dart';
 import '../../controllers/signup_controller.dart';
+import '../../models/user_model.dart';
 import '../Forget_Password/Forget_Password_Otp/otp_screen.dart';
 import '../Login/login_screen.dart';
 
@@ -34,8 +35,9 @@ class PhoneNumberFormWidget extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  SignUpController.instance.phoneAuthentication(controller.phoneNo.text.trim());
-                  Get.to(() => const OTPScreen());
+                  if(_formkey.currentState!.validate()) {
+                    SignUpController.instance.phoneAuthentication(controller.phoneNo.text.trim());
+                  }
                 },
                 child: Text(moSignup.toUpperCase()),
               ),

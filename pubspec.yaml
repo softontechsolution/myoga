@@ -25,6 +25,14 @@ dependencies:
   flutter_otp_text_field: ^1.1.1
   otp_timer_button: ^1.1.0
   line_awesome_flutter: ^2.0.0
+  google_maps_flutter: ^2.2.2
+  location: ^4.4.0
+  geolocator: ^9.0.2
+  http: ^0.13.5
+  provider: ^6.0.5
+  flutter_polyline_points: ^1.0.0
+  animated_text_kit: ^4.2.2
+  font_awesome_flutter: ^10.3.0
 
 
 dev_dependencies:

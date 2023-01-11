@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:myoga/services/views/Profile/profile_screen.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/image_strings.dart';
@@ -31,7 +32,7 @@ class UpdateProfileScreen extends StatelessWidget {
           padding: const EdgeInsets.all(30.0),
           child: Column(
             children: [
-          Stack(
+              Stack(
           children: [
           SizedBox(
           width: 120.0,
@@ -54,6 +55,58 @@ class UpdateProfileScreen extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 40.0),
+              Form(child: Column(
+                children: [
+                  TextFormField(decoration: const InputDecoration(label: Text(moFullName), prefixIcon: Icon(LineAwesomeIcons.user)),
+                  ),
+                  const SizedBox(height: 20.0),
+                  TextFormField(decoration: const InputDecoration(label: Text(moEmail), prefixIcon: Icon(LineAwesomeIcons.envelope)),
+                  ),
+                  const SizedBox(height: 20.0),
+                  TextFormField(decoration: const InputDecoration(label: Text(moPhone), prefixIcon: Icon(LineAwesomeIcons.phone)),
+                  ),
+                  const SizedBox(height: 20.0),
+                  TextFormField(decoration: const InputDecoration(label: Text(moAddress), prefixIcon: Icon(LineAwesomeIcons.address_card)),
+                  ),
+                  const SizedBox(height: 20.0),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () { Get.to(() => const ProfileScreen()); },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: PButtonColor,
+                          side: BorderSide.none,
+                          shape: const StadiumBorder()),
+                      child: const Text(moUpdate,
+                          style: TextStyle(color: PWhiteColor)),
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children:  [
+                      const Text.rich(
+                        TextSpan(
+                          text: moJoined,
+                          style: TextStyle(fontSize: 12),
+                          children: [
+                            TextSpan(text: moJoinAt, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))
+                          ]
+                        )
+                      ),
+                      ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent.withOpacity(0.1),
+                          elevation: 0, foregroundColor: Colors.red, shape: const StadiumBorder(),
+                          side: BorderSide.none),
+                          child: const Text(moDelete)
+                      )
+                    ],
+                  )
+                ],
+              ))
             ]
           ),
         ),

@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myoga/services/views/User_Dashboard/user_dashboard.dart';
 
 import '../../services/views/Dashboard/dashboard.dart';
+import '../../services/views/Login/login_screen.dart';
 import '../../services/views/Phone_Number_Screen/phone_number.dart';
+import '../../services/views/Signup/signup_screen.dart';
 import '../../services/views/welcome_screen/welcome_screen.dart';
 import 'exceptions/signup_email_password_failure.dart';
 
@@ -24,7 +27,7 @@ class AuthenticationRepository extends GetxController {
 
   _setInitialScreen(User? user) {
     user == null
-        ? Get.offAll(() => const WelcomeScreen())
+        ? Get.offAll(() =>  UserDashboard()) //const WelcomeScreen())
         : Get.offAll(() => const Dashboard());
   }
 
@@ -53,36 +56,63 @@ class AuthenticationRepository extends GetxController {
   }
 
   Future<bool> verifyOTP(String otp) async {
-    var credentials = await _auth.signInWithCredential(PhoneAuthProvider.credential(
-        verificationId: verificationId.value, smsCode: otp));
+    var credentials = await _auth.signInWithCredential(
+        PhoneAuthProvider.credential(
+            verificationId: verificationId.value, smsCode: otp));
     return credentials.user != null ? true : false;
   }
 
-  Future<void> createUserWithEmailAndPassword(
-      String email, String password) async {
+  Future<void> createUserWithEmailAndPassword(String email,
+      String password) async {
     try {
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       firebaseUser.value != null
           ? Get.offAll(() => const PhoneNumberScreen())
-          : Get.to(() => const WelcomeScreen());
+          : Get.to(() => const SignUpScreen());
     } on FirebaseAuthException catch (e) {
       final ex = SignUpWithEmailAndPasswordFailure.code(e.code);
-      print("FIREBASE AUTH EXCEPTION = ${ex.message}");
+      Get.snackbar(
+          ex.toString(), ex.message, snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green.withOpacity(0.1),
+          colorText: Colors.green
+      );
       throw ex;
     } catch (_) {
       const ex = SignUpWithEmailAndPasswordFailure();
-      print("EXCEPTION = ${ex.message}");
+      Get.snackbar(
+          ex.toString(), ex.message, snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green.withOpacity(0.1),
+          colorText: Colors.green
+      );
       throw ex;
     }
   }
 
-  Future<void> loginUserWithEmailAndPassword(
-      String email, String password) async {
+  Future<void> loginUserWithEmailAndPassword(String email,
+      String password) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+      firebaseUser.value != null
+          ? Get.offAll(() => const Dashboard())
+          : Get.to(() => const LoginScreen());
     } on FirebaseAuthException catch (e) {
-    } catch (_) {}
+      final ex = SignUpWithEmailAndPasswordFailure.code(e.code);
+      Get.snackbar(
+        ex.toString(), ex.message, snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green.withOpacity(0.1),
+        colorText: Colors.green
+      );
+      throw ex;
+    } catch (_) {
+      const ex = SignUpWithEmailAndPasswordFailure();
+      Get.snackbar(
+          ex.toString(), ex.message, snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green.withOpacity(0.1),
+          colorText: Colors.green
+      );
+      throw ex;
+    }
   }
 
   Future<void> logout() async => await _auth.signOut();
