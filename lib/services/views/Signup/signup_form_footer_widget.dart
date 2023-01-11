@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:get/get.dart';
+import 'package:myoga/services/views/Login/login_screen.dart';
 import '../../../constants/image_strings.dart';
 import '../../../constants/texts_string.dart';
 
@@ -13,7 +15,9 @@ class SignupFormFooter extends StatelessWidget {
     return Column(
       children: [
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.to(()=> const LoginScreen());
+          },
           child: Text.rich(
             TextSpan(children: [
               TextSpan(

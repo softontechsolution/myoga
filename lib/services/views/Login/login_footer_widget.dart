@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myoga/services/views/Signup/signup_screen.dart';
 
+import 'package:get/get.dart';
 import '../../../constants/colors.dart';
 import '../../../constants/image_strings.dart';
 import '../../../constants/texts_string.dart';
@@ -14,7 +16,7 @@ class LoginFooterWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text("OR"),
+        const Text("OR"),
         const SizedBox(
           height: 5.0,
         ),
@@ -26,14 +28,16 @@ class LoginFooterWidget extends StatelessWidget {
               width: 20.0,
             ),
             onPressed: () {},
-            label: Text(moGoogleSignIn),
+            label: const Text(moGoogleSignIn),
           ),
         ),
         const SizedBox(
           height: 5.0,
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.to(()=> const SignUpScreen());
+          },
           child: Text.rich(
             TextSpan(
                 text: moDontHaveAccount,
