@@ -4,6 +4,7 @@ import 'package:myoga/repositories/authentication_repository/authentication_repo
 import 'package:myoga/services/controllers/Data_handler/appData.dart';
 import 'package:myoga/services/controllers/otp_controller.dart';
 import 'package:myoga/services/views/User_Dashboard/user_dashboard.dart';
+import 'package:myoga/services/views/welcome_screen/welcome_screen.dart';
 import 'package:myoga/utils/themes/theme.dart';
 import 'firebase_options.dart';
 import 'services/views/splash_screen/splash_screen.dart';
@@ -22,7 +23,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final otpController = Get.put(OTPController());
     return ChangeNotifierProvider(
       create: (context) => AppData(),
       child: GetMaterialApp(
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         defaultTransition: Transition.leftToRightWithFade,
         transitionDuration: const Duration(milliseconds: 100),
-        home:const UserDashboard(),
+        home: SplashScreen(),
       ),
     );
   }

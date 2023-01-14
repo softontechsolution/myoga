@@ -37,5 +37,9 @@ class SignUpController extends GetxController {
     Get.to(() => const OTPScreen());
   }
 
+  updatePhoneNumber(phoneNumber) async {
+    await userRepo.updatePhone(phoneNumber);
+  }
+
 
 }

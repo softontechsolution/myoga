@@ -42,7 +42,7 @@ class OTPScreen extends StatelessWidget {
                   filled: true,
                   onSubmit: (code) {
                     otp = code;
-                    OTPController.instance.verifyOTP(otp);
+                    otpController.verifyOTP(otp);
                   }),
               const SizedBox(
                 height: 20.0,
@@ -51,7 +51,7 @@ class OTPScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                     onPressed: () {
-                      OTPController.instance.verifyOTP(otp);
+                      otpController.verifyOTP(otp);
                     },
                     child: const Text(moNext)),
               ),

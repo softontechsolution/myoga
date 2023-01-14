@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:myoga/configMaps.dart';
 import 'package:myoga/services/controllers/Assistant/requestController.dart';
+import 'package:myoga/services/models/allUsers.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/address.dart';
@@ -60,6 +63,19 @@ class AssistanceMethods {
     double totalNaira = totalFare * 740;
 
     return totalNaira.truncate();
+  }
+
+  static void getCurrentOnlineUserInfo() async {
+    firebaseUser = await FirebaseAuth.instance.currentUser!;
+    String userId = firebaseUser.uid;
+    DatabaseReference reference = FirebaseDatabase.instance.ref().child("users").child(userId);
+
+    reference.once().then((event){
+      final dataSnapShot = event.snapshot;
+      if(dataSnapShot.value != null){
+        userCurrentInfo = Users.fromSnapshot(dataSnapShot);
+      }
+    });
   }
 
 }

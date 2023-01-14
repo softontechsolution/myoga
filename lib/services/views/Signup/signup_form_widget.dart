@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -59,7 +60,7 @@ class SignupFormWidget extends StatelessWidget {
               validator: (value){
                 if(value == null || value.isEmpty)
                 {
-                  return "Please enter your email";
+                  return "Please enter your password";
                 }
                 return null;
               },
@@ -72,7 +73,7 @@ class SignupFormWidget extends StatelessWidget {
                   label: Text(moRepeatPassword),
                   prefixIcon: Icon(Icons.fingerprint_outlined)),
               validator: (value){
-                if(value != controller.password)
+                if(value != controller.password.text.trim())
                 {
                   return "Password not match";
                 }
@@ -83,15 +84,18 @@ class SignupFormWidget extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if(_formkey.currentState!.validate()){
-
+                    final document = FirebaseFirestore.instance
+                        .collection('Users')
+                        .doc();
                     final user = UserModel(
+                      id: document.id,
                       email: controller.email.text.trim(),
                       fullname: controller.name.text.trim(),
                       password: controller.password.text.trim(),
                     );
-                    SignUpController.instance.createUser(user);
+                    await SignUpController.instance.createUser(user);
                     SignUpController.instance.registerUser(controller.email.text.trim(), controller.password.text.trim());
                   }
                 },

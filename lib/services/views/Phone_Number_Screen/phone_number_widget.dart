@@ -34,8 +34,10 @@ class PhoneNumberFormWidget extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if(_formkey.currentState!.validate()) {
+                    final String phoneNumber = controller.phoneNo.text.trim();
+                    await SignUpController.instance.updatePhoneNumber(phoneNumber);
                     SignUpController.instance.phoneAuthentication(controller.phoneNo.text.trim());
                   }
                 },

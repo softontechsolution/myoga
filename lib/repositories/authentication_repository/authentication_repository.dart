@@ -7,6 +7,7 @@ import '../../services/views/Dashboard/dashboard.dart';
 import '../../services/views/Login/login_screen.dart';
 import '../../services/views/Phone_Number_Screen/phone_number.dart';
 import '../../services/views/Signup/signup_screen.dart';
+import '../../services/views/splash_screen/splash_screen.dart';
 import '../../services/views/welcome_screen/welcome_screen.dart';
 import 'exceptions/signup_email_password_failure.dart';
 
@@ -27,8 +28,8 @@ class AuthenticationRepository extends GetxController {
 
   _setInitialScreen(User? user) {
     user == null
-        ? Get.offAll(() =>  UserDashboard()) //const WelcomeScreen())
-        : Get.offAll(() => const Dashboard());
+        ? Get.offAll(() => SplashScreen())
+        : Get.offAll(() => UserDashboard());
   }
 
 // Functions
@@ -94,7 +95,7 @@ class AuthenticationRepository extends GetxController {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       firebaseUser.value != null
-          ? Get.offAll(() => const Dashboard())
+          ? Get.offAll(() => const UserDashboard())
           : Get.to(() => const LoginScreen());
     } on FirebaseAuthException catch (e) {
       final ex = SignUpWithEmailAndPasswordFailure.code(e.code);

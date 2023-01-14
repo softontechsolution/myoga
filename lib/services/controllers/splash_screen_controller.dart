@@ -11,9 +11,9 @@ class SplashScreenController extends GetxController {
   RxBool animate = false.obs;
 
   Future startAnimation() async {
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 50));
     animate.value = true;
-    await Future.delayed(const Duration(milliseconds: 5000));
+    await Future.delayed(const Duration(milliseconds: 2000));
     Get.to(const WelcomeScreen());
   }
 
