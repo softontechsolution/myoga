@@ -45,7 +45,7 @@ class _SelectRideScreenState extends State<SelectRideScreen> with TickerProvider
   final Completer<GoogleMapController> _controllerGoogleMap = Completer<GoogleMapController>();
   late GoogleMapController newGoogleMapController;
 
-   late DirectionDetails tripDirectionDetails;
+  late DirectionDetails tripDirectionDetails;
   String pickUpLocation = "";
   String dropOffLocation = "";
   late PackageDetails packageDetails;

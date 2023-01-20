@@ -18,6 +18,12 @@ const String moOnBoardingCounter3 = "3/3";
 const String moWelcomeTitle = "Send your parcels using MY OGA";
 const String moWelcomeSubtitle = "Easy. Fast. Secure.";
 
+//Change Password Screen
+const String moNewPassword = "New Password";
+const String moChangePassword = "Change Password";
+const String moDone = "Done";
+
+
 //Login Screen Text
 const String moWelcomeBack = "Welcome Back";
 const String moWelcomeBackTagline = "Got any deliveries to make? Send Me.";
@@ -51,6 +57,15 @@ const String moPhoneSubTitle = "Verify your phone number.";
 const String moOtpVerify = "Verify";
 
 //Profile texts
+const String moProfilePics = "Profile Photo";
+const String moProfileInfoHead = "Personal Information";
+const String moProfileName = "Full Name:";
+const String moProfileEmail = "Email:";
+const String moProfileDOB = "DOB:";
+const String moProfilePhone = "Phone:";
+const String moProfileGender = "Gender:";
+const String moProfileAddress = "Address:";
+const String moProfileInfo = "My Profile";
 const String moProfile = "Profile";
 const String moEditProfile = "Edit Profile";
 const String moLogoutDialog = "Logout";

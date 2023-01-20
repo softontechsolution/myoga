@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:myoga/services/views/Profile/profile_info_screen.dart';
 import 'package:myoga/services/views/Profile/update_profile_screen.dart';
 
 import '../../../constants/colors.dart';
@@ -34,6 +35,7 @@ class ProfileScreen extends StatelessWidget {
           padding: const EdgeInsets.all(30.0),
           child: Column(
             children: [
+
               Stack(
                 children: [
                   SizedBox(
@@ -80,7 +82,9 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 10.0),
               //Menu
               ProfileMenuWidget(
-                  title: moMenu1, icon: LineAwesomeIcons.user, onPress: () {}),
+                  title: moMenu1, icon: LineAwesomeIcons.user, onPress: () {
+                    Get.to(() => const ProfileInformation());
+              }),
               ProfileMenuWidget(
                   title: moMenu2,
                   icon: LineAwesomeIcons.receipt,
