@@ -35,3 +35,4 @@ const String moPickupPicWhite ="assets/images/PickupiconWhite.png";
 const String moBox ="assets/images/box.png";
 const String moCar ="assets/images/car.png";
 const String moMotor ="assets/images/motorbike.png";
+const String moTruck ="assets/images/truck.png";

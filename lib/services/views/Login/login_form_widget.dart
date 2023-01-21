@@ -54,6 +54,7 @@ class LoginForm extends StatelessWidget {
                   icon: Icon(Icons.remove_red_eye_sharp),
                 ),
               ),
+              obscureText: true,
               validator: (value){
                 if(value == null || value.isEmpty)
                 {

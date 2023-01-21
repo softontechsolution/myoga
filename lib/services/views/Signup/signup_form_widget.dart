@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../../constants/texts_string.dart';
 import '../../controllers/signup_controller.dart';
 import '../../models/user_model.dart';
+import '../Forget_Password/Forget_Password_Otp/otp_screen.dart';
 import '../Login/login_screen.dart';
 import '../Phone_Number_Screen/phone_number.dart';
 
@@ -17,7 +18,6 @@ class SignupFormWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(SignUpController());
     final _formkey = GlobalKey<FormState>();
-
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: Form(
@@ -86,11 +86,8 @@ class SignupFormWidget extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () async {
                   if(_formkey.currentState!.validate()){
-                    final document = FirebaseFirestore.instance
-                        .collection('Users')
-                        .doc();
+
                     final user = UserModel(
-                      id: document.id,
                       email: controller.email.text.trim(),
                       fullname: controller.name.text.trim(),
                       password: controller.password.text.trim(),

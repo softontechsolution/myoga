@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,11 +13,16 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import '../../../constants/colors.dart';
 import '../../../constants/image_strings.dart';
 import '../../../constants/texts_string.dart';
+import '../../../repositories/authentication_repository/authentication_repository.dart';
 import '../../../widgets/progressDialog.dart';
 import '../../controllers/Assistant/assistanceMethods.dart';
+import '../../controllers/signup_controller.dart';
 import '../../controllers/user_dashboard_controller.dart';
+import '../../models/booking_model.dart';
+import '../../models/details_model.dart';
 import '../../models/directDetails.dart';
 import '../../models/package_details_model.dart';
+import '../../models/user_model.dart';
 import '../Dashboard/widget/appbar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -27,12 +33,14 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 
 import '../Pickup_Location/pickup_location_screen.dart';
 import '../User_Dashboard/user_dashboard.dart';
+import '../../../repositories/user_repository/user_repository.dart';
 
 
 class SelectRideScreen extends StatefulWidget {
 
+  const SelectRideScreen({Key? key}) : super(key: key);
 
-  const SelectRideScreen({super.key});
+
 
   @override
   State<SelectRideScreen> createState() => _SelectRideScreenState();
@@ -45,10 +53,9 @@ class _SelectRideScreenState extends State<SelectRideScreen> with TickerProvider
   final Completer<GoogleMapController> _controllerGoogleMap = Completer<GoogleMapController>();
   late GoogleMapController newGoogleMapController;
 
-   late DirectionDetails tripDirectionDetails;
+  late DirectionDetails tripDirectionDetails;
   String pickUpLocation = "";
   String dropOffLocation = "";
-  late PackageDetails packageDetails;
 
 
   List<LatLng> pLineCoordinates = [];
@@ -67,53 +74,17 @@ class _SelectRideScreenState extends State<SelectRideScreen> with TickerProvider
 
   bool drawerOpen = true;
   late DatabaseReference bookingRequestReference;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    AssistanceMethods.getCurrentOnlineUserInfo();
-  }
-
-  void saveBookingRequest()
-  {
-    bookingRequestReference = FirebaseDatabase.instance.ref().child('Booking Request').push();
-
-    var pickUp = Provider.of<AppData>(context, listen: false).pickUpLocation;
-    var dropOff = Provider.of<AppData>(context, listen: false).dropOffLocation;
-
-    Map pickUpLocMap =
-    {
-          "latitude": pickUp?.latitude.toString(),
-          "longitude": pickUp?.longitude.toString(),
-    };
-    Map dropOffLocMap =
-    {
-      "latitude": dropOff?.latitude.toString(),
-      "longitude": dropOff?.longitude.toString(),
-    };
-    Map bookingInfoMap =
-    {
-      "driver_id": "waiting",
-      "payment_method": packageDetails.paymentType,
-      "pickup": pickUpLocMap,
-      "drop_off": dropOffLocMap,
-      "created_at": DateTime.now().toString(),
-      "customer_name": userCurrentInfo.name,
-      "customer_phone": userCurrentInfo.phone,
-      "customer_id": userCurrentInfo.id,
-      "pickup_address": pickUp?.placeName,
-      "dropoff_address": dropOff?.placeName,
-      "status": "pending",
-    };
-    bookingRequestReference.set(bookingInfoMap);
-  }
+  UserRepository userRepo = Get.put(UserRepository());
+  final controller = Get.put(SignUpController());
+  final _authRepo = Get.put(AuthenticationRepository());
 
   void cancelBookingRequest(){
     bookingRequestReference.remove();
   }
 
   void displayRequestDriverContainer(){
+    var pickUp = Provider.of<AppData>(context, listen: false).pickUpLocation;
+    var dropOff = Provider.of<AppData>(context, listen: false).dropOffLocation;
     setState(() {
       requestDriverContainer = 380.0;
       ridePriceContainer = 0;
@@ -121,7 +92,6 @@ class _SelectRideScreenState extends State<SelectRideScreen> with TickerProvider
       bottomPaddingOfMap = 380.0;
       drawerOpen = false;
     });
-    saveBookingRequest();
   }
 
   resetApp(){
@@ -184,10 +154,14 @@ class _SelectRideScreenState extends State<SelectRideScreen> with TickerProvider
   );
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getPlaceDirection();
+  }
+  
+  @override
   Widget build(BuildContext context) {
-    setState(() {
-      getPlaceDirection();
-    });
     String? placeAddress = Provider.of<AppData>(context, listen: false).pickUpLocation?.placeName;
     pickUpLocation = placeAddress!;
     String? dropPlaceAddress = Provider.of<AppData>(context, listen: false).dropOffLocation?.placeName;
@@ -245,12 +219,12 @@ class _SelectRideScreenState extends State<SelectRideScreen> with TickerProvider
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Row(
                             children: [
-                              const Image(image: AssetImage(moCar), height: 70.0, width: 70.0,),
+                              const Image(image: AssetImage(moTruck), height: 70.0, width: 70.0,),
                               const SizedBox(width: 16.0,),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Car", style: Theme.of(context).textTheme.headline4,),
+                                  Text("Truck", style: Theme.of(context).textTheme.headline4,),
                                 ],
                               ),
                             ],
@@ -408,9 +382,34 @@ class _SelectRideScreenState extends State<SelectRideScreen> with TickerProvider
                         child: SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: (){
+                            onPressed: () async {
+                              var pickUp = Provider.of<AppData>(context, listen: false).pickUpLocation;
+                              var dropOff = Provider.of<AppData>(context, listen: false).dropOffLocation;
+                              final email = _authRepo.firebaseUser.value?.email;
+                              UserModel userInfo = await userRepo.getUserDetails(email!);
+                              //PackageDetails packageData = await userRepo.getPackageDetails(userInfo.id!);
+                              final booking = BookingModel(
+                                driver_id: "searching",
+                                payment_method: "Cash on Delivery",
+                                additional_details: " ",
+                                dropOff_latitude: dropOff?.latitude.toString(),
+                                dropOff_longitude: dropOff?.longitude.toString(),
+                                pickUp_latitude: pickUp?.latitude.toString(),
+                                pickUp_longitude: pickUp?.longitude.toString(),
+                                created_at: DateTime.now().toString(),
+                                customer_name: userInfo.fullname.toString(),
+                                customer_phone: userInfo.phoneNo.toString(),
+                                customer_id: userInfo.id,
+                                pickup_address: pickUp?.placeName.toString(),
+                                dropOff_address: dropOff?.placeName.toString(),
+                                status: "pending",
+                                amount: "\N${AssistanceMethods.calculateFares(tripDirectionDetails)}",
+                                distance: tripDirectionDetails.distanceText!,
+                              );
+                              await SignUpController.instance.saveBooking(booking);
                               displayRequestDriverContainer();
                             },
+
                             child: Text(moProceed.toUpperCase(), style: const TextStyle(color: Colors.white),),
                           ),
                         ),

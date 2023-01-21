@@ -4,8 +4,12 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import '../../../constants/texts_string.dart';
-import '../../models/booking_address_model.dart';
+import '../../../repositories/authentication_repository/authentication_repository.dart';
+import '../../../repositories/user_repository/user_repository.dart';
+import '../../controllers/signup_controller.dart';
+import '../../models/details_model.dart';
 import '../../models/package_details_model.dart';
+import '../../models/user_model.dart';
 import '../Confirm_Order/confirm_order_screen.dart';
 
 enum PackageTypeEnum { Container, Box, Others }
@@ -25,12 +29,17 @@ class _PackageTypeScreenState extends State<PackageTypeScreen> {
   final _weightController = TextEditingController();
   final _heightController = TextEditingController();
   final _widthController = TextEditingController();
+  final _addController = TextEditingController();
   PackageTypeEnum? _packageTypeEnum;
 
   final _paymentMethodList = ["Cash on Delivery", "Wallet", "Bank"];
   String? _selectedVal = "";
 
   final _formKey = GlobalKey<FormState>();
+  UserRepository userRepo = Get.put(UserRepository());
+  final controller = Get.put(SignUpController());
+  final _authRepo = Get.put(AuthenticationRepository());
+
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +131,32 @@ class _PackageTypeScreenState extends State<PackageTypeScreen> {
                   ),
                   const SizedBox(
                     height: 10.0,
+                  ),
+                  Text(
+                    moAddPackageDetails,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                  const SizedBox(
+                    height: 3.0,
+                  ),
+                  TextFormField(
+                    validator: (value){
+                      if(value == null || value.isEmpty){
+                        return "Please enter details";
+                      }
+                      else {
+                        return null;
+                      }
+                    },
+                    controller: _addController,
+                    decoration: const InputDecoration(
+                      label: Text(moAddPackageDetails),
+                      prefixIcon: Icon(LineAwesomeIcons.edit),
+                      border: OutlineInputBorder(),
+                    ),
+                    minLines: 6, // any number you need (It works as the rows for the textarea)
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
                   ),
                   Text(
                     moSelectPackageType,
@@ -221,20 +256,19 @@ class _PackageTypeScreenState extends State<PackageTypeScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if(_formKey.currentState!.validate()){
-                          BookingAddress bookingAddress = BookingAddress();
-                          PackageDetails packageDetails = PackageDetails();
-                          packageDetails.packageWeight = _weightController.text;
-                          packageDetails.packageHeight = _heightController.text;
-                          packageDetails.packageWidth = _widthController.text;
-                          packageDetails.packageType = _packageTypeEnum!;
-                          packageDetails.paymentType = _selectedVal!;
+                          PackageModel packageModel = PackageModel();
+                          packageModel.packageWeight = _weightController.text.trim();
+                          packageModel.packageHeight = _heightController.text.trim();
+                          packageModel.packageWidth = _widthController.text.trim();
+                          packageModel.additionalDetails = _addController.text.trim();
+                          packageModel.packageType = _packageTypeEnum!;
+                          packageModel.paymentType = _selectedVal!;
 
                           Navigator.push(context, MaterialPageRoute(builder: (context){
-                            return ConfirmOrderScreen(packageDetails: packageDetails, bookingAddress: bookingAddress,);
+                            return ConfirmOrderScreen(packageModel: packageModel);
                           }));
-
                         }
                       },
                       style: Theme.of(context).elevatedButtonTheme.style,

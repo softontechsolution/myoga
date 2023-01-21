@@ -5,6 +5,8 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:myoga/repositories/authentication_repository/authentication_repository.dart';
 
 import '../../repositories/user_repository/user_repository.dart';
+import '../models/booking_model.dart';
+import '../models/package_details_model.dart';
 import '../models/user_model.dart';
 import '../views/Forget_Password/Forget_Password_Otp/otp_screen.dart';
 import '../views/Phone_Number_Screen/phone_number.dart';
@@ -34,12 +36,17 @@ class SignUpController extends GetxController {
 
   void phoneAuthentication(String phoneNo){
     AuthenticationRepository.instance.phoneAuthentication(phoneNo);
-    Get.to(() => const OTPScreen());
   }
 
-  updatePhoneNumber(phoneNumber) async {
-    await userRepo.updatePhone(phoneNumber);
+  updatePhoneNumber(String phone) async {
+    await userRepo.updatePhone(phone);
   }
 
+  Future<void> saveBooking(BookingModel booking) async {
+    await userRepo.saveBookingRequest(booking);
+  }
 
+  Future<void> savePackage(PackageDetails package) async {
+    await userRepo.savePackageDetail(package);
+  }
 }

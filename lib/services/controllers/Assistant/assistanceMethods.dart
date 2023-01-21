@@ -27,7 +27,7 @@ class AssistanceMethods {
       userPickUpAddress.longitude = position.longitude;
       userPickUpAddress.placeName = streetAddress;
 
-      //Provider.of<AppData>(context, listen: false).updatePickUpLocationAddress(userPickUpAddress);
+      Provider.of<AppData>(context, listen: false).updatePickUpLocationAddress(userPickUpAddress);
 
     }
 
@@ -65,17 +65,17 @@ class AssistanceMethods {
     return totalNaira.truncate();
   }
 
-  static void getCurrentOnlineUserInfo() async {
-    firebaseUser = await FirebaseAuth.instance.currentUser!;
-    String userId = firebaseUser.uid;
-    DatabaseReference reference = FirebaseDatabase.instance.ref().child("users").child(userId);
-
-    reference.once().then((event){
-      final dataSnapShot = event.snapshot;
-      if(dataSnapShot.value != null){
-        userCurrentInfo = Users.fromSnapshot(dataSnapShot);
-      }
-    });
-  }
+  //static void getCurrentOnlineUserInfo() async {
+  //  firebaseUser = await FirebaseAuth.instance.currentUser!;
+  //  String userId = firebaseUser.uid;
+  //  DatabaseReference reference = FirebaseDatabase.instance.ref().child("users").child(userId);
+//
+   // reference.once().then((event){
+   //   final dataSnapShot = event.snapshot;
+   //   if(dataSnapShot.value != null){
+   //     userCurrentInfo = Users.fromSnapshot(dataSnapShot);
+   //   }
+   // });
+ // }
 
 }

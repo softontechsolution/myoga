@@ -85,6 +85,7 @@ const String moBookLater = "Book Later";
 //Edit Booking Details Text
 const String moContainer = "Container";
 const String moPackageTitle = "Package Details";
+const String moAddPackageDetails = "Additional Details";
 const String moSelectPackageType = "Select Package Type";
 const String moPackageBox = "Box";
 const String moOther = "Other";
@@ -119,6 +120,9 @@ const String moDropOff = "DropOff Location";
 const String moDistance = "Distance: ";
 const String moPaymentMethod = "Payment Method: ";
 const String moPrice = "Charges: ";
+
+//My Order Screen Text
+const String moMyOrders = "My Bookings";
 
 
 

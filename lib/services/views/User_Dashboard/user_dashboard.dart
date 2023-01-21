@@ -10,6 +10,8 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import '../../../constants/colors.dart';
 import '../../../constants/image_strings.dart';
 import '../../../constants/texts_string.dart';
+import '../../../repositories/authentication_repository/authentication_repository.dart';
+import '../../../repositories/user_repository/user_repository.dart';
 import '../../../widgets/progressDialog.dart';
 import '../../controllers/Assistant/assistanceMethods.dart';
 import '../../controllers/user_dashboard_controller.dart';
@@ -37,6 +39,8 @@ class _UserDashboardState extends State<UserDashboard> with TickerProviderStateM
 {
   final Completer<GoogleMapController> _controllerGoogleMap = Completer<GoogleMapController>();
   late GoogleMapController newGoogleMapController;
+  UserRepository userRepo = Get.put(UserRepository());
+
 
   List<LatLng> pLineCoordinates = [];
   Set<Polyline> polylineSet = {};
@@ -47,13 +51,6 @@ class _UserDashboardState extends State<UserDashboard> with TickerProviderStateM
 
   Set<Marker> markersSet = {};
   Set<Circle> circlesSet = {};
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    AssistanceMethods.getCurrentOnlineUserInfo();
-  }
 
 
   void locatePosition() async {
@@ -117,9 +114,106 @@ class _UserDashboardState extends State<UserDashboard> with TickerProviderStateM
             {
               _controllerGoogleMap.complete(controller);
               newGoogleMapController = controller;
+
+              setState(() {
+                bottomPaddingOfMap = 320.0;
+              });
+
               locatePosition();
 
             },
+          ),
+          
+          Positioned(
+            left: 0.0,
+            right: 0.0,
+            bottom: 0.0,
+            child: Container(
+              height: 320.0,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 6.0,),
+                    Text("Hi, there", style: Theme.of(context).textTheme.headline6,),
+                    Text("Got any deliveries?", style: Theme.of(context).textTheme.headline4,),
+                    const SizedBox(height: 6.0,),
+                    GestureDetector(
+                      onTap: (){
+                        Get.to(() => PickupLocationScreen());
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(5.0),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black54,
+                              blurRadius: 2.5,
+                              spreadRadius: 0.5,
+                              offset: Offset(0.7, 0.7)
+                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            children: const [
+                              Icon(LineAwesomeIcons.search, color: moSecondarColor,),
+                              SizedBox(width: 10.0,),
+                              Text("Search Location"),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24.0,),
+                    Row(
+                      children: [
+                        const Icon(LineAwesomeIcons.search_location, color: moSecondarColor,),
+                        const SizedBox(width: 12.0,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text( Provider.of<AppData>(context).pickUpLocation != null
+                              ? Provider.of<AppData>(context).pickUpLocation!.placeName!
+                              : "Add Address", style: Theme.of(context).textTheme.headline6,),
+                            const SizedBox(height: 4.0,),
+                            Text("Your current location address", style: Theme.of(context).textTheme.bodyText1,),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10.0,),
+                    const Divider(
+                      height: 1.0,
+                      color: moPrimaryColor,
+                      thickness: 1.0,
+                    ),
+                    const SizedBox(height: 16.0,),
+                    Row(
+                      children: [
+                        const Icon(LineAwesomeIcons.location_arrow, color: moSecondarColor,),
+                        const SizedBox(width: 12.0,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Add Drop Address", style: Theme.of(context).textTheme.headline6,),
+                            const SizedBox(height: 4.0,),
+                            Text("Your drop-off location address", style: Theme.of(context).textTheme.bodyText1,),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -133,7 +227,6 @@ class _UserDashboardState extends State<UserDashboard> with TickerProviderStateM
             color: Colors.white,
             size: 30.0),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 

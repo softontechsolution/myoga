@@ -9,6 +9,9 @@ class UserModel {
   final String? password;
   final String? phoneNo;
   final String? address;
+  final String? profilePic;
+  final String? gender;
+  final String? dateOfBirth;
 
   const UserModel({
     this.id,
@@ -17,19 +20,26 @@ class UserModel {
     this.password,
     this.phoneNo,
     this.address,
+    this.profilePic,
+    this.gender,
+    this.dateOfBirth,
   });
 
   toJson() {
     return {
-      "ID": id,
       "FullName": fullname,
       "Email": email,
       "Password": password,
       "Phone": phoneNo,
       "Address": address,
+      "Profile Photo": profilePic,
+      "Gender": gender,
+      "Date of Birth": dateOfBirth,
     };
   }
 
+  ///Getting User Info Mapping
+  
   /// Map user fetched from Firebase to UserModel
 
   factory UserModel.fromSnapshot(
@@ -43,6 +53,9 @@ class UserModel {
       fullname: data["FullName"],
       phoneNo: data["Phone"],
       address: data["Address"],
+      profilePic: data["Profile Photo"],
+      gender: data["Gender"],
+      dateOfBirth: data["Date of Birth"],
     );
   }
 

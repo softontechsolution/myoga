@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:myoga/services/views/User_Dashboard/user_dashboard.dart';
 
 import '../../services/views/Dashboard/dashboard.dart';
+import '../../services/views/Forget_Password/Forget_Password_Otp/otp_screen.dart';
 import '../../services/views/Login/login_screen.dart';
 import '../../services/views/Phone_Number_Screen/phone_number.dart';
 import '../../services/views/Signup/signup_screen.dart';
@@ -29,7 +30,7 @@ class AuthenticationRepository extends GetxController {
   _setInitialScreen(User? user) {
     user == null
         ? Get.offAll(() => SplashScreen())
-        : Get.offAll(() => UserDashboard());
+        : Get.offAll(() => const UserDashboard());
   }
 
 // Functions

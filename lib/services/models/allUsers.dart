@@ -7,7 +7,7 @@ class Users {
   String? name;
   String? phone;
 
-  Users({this.id, this.email, this.name, required this.phone,});
+  Users({this.id, this.email, this.name, this.phone,});
 
   Users.fromSnapshot(DataSnapshot dataSnapshot){
     id = dataSnapshot.key;

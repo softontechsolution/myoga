@@ -36,10 +36,10 @@ class PhoneNumberFormWidget extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () async {
                   if(_formkey.currentState!.validate()) {
-                    final String phoneNumber = controller.phoneNo.text.trim();
-                    await SignUpController.instance.updatePhoneNumber(phoneNumber);
-                    SignUpController.instance.phoneAuthentication(controller.phoneNo.text.trim());
+                    await SignUpController.instance.updatePhoneNumber(controller.phoneNo.text.trim());
                   }
+                  SignUpController.instance.phoneAuthentication(controller.phoneNo.text.trim());
+                  Get.offAll(() => const OTPScreen());
                 },
                 child: Text(moSignup.toUpperCase()),
               ),

@@ -18,6 +18,7 @@ dependencies:
   firebase_auth: ^4.1.4
   flutter_bloc: ^8.1.1
   firebase_database: ^10.0.9
+  firebase_storage: ^11.0.10
   equatable: ^2.0.5
   sms_autofill: ^2.2.0
   google_fonts: ^3.0.1
@@ -35,6 +36,7 @@ dependencies:
   animated_text_kit: ^4.2.2
   font_awesome_flutter: ^10.3.0
   draggable_fab: ^0.1.4
+  image_picker: ^0.8.6
 
 
 dev_dependencies:
