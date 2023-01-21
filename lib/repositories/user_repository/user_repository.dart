@@ -2,18 +2,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myoga/configMaps.dart';
-import 'package:provider/provider.dart';
-import 'package:path/path.dart';
 
-import '../../services/controllers/Data_handler/appData.dart';
 import '../../services/models/booking_model.dart';
 import '../../services/models/package_details_model.dart';
 import '../../services/models/user_model.dart';
-import '../../services/views/Select_Ride/select_ride_screen.dart';
 import '../authentication_repository/authentication_repository.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
 
 //Here performs the database operations
 
@@ -21,6 +15,7 @@ class UserRepository extends GetxController {
   static UserRepository get instance => Get.find();
 
   final _db = FirebaseFirestore.instance;
+
   final _authRepo = Get.put(AuthenticationRepository());
 
   ///Stores users info in FireStore
@@ -46,6 +41,7 @@ class UserRepository extends GetxController {
     final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).single;
     return userData;
   }
+
 
   ///Fetch All Users
   Future<List<UserModel>> getAllUserDetails() async {
@@ -119,7 +115,7 @@ class UserRepository extends GetxController {
     return packageData;
   }
 
-
+  ///Retrieving Booking Details From Database
   Future<List<BookingModel>>getUserBookingDetails() async {
     final email = _authRepo.firebaseUser.value?.email;
     UserModel userInfo = await getUserDetails(email!);

@@ -29,7 +29,7 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),),
           child: IconButton(onPressed: () {
-            Get.to(() => const ProfileScreen());
+            Get.to(() => ProfileScreen());
           }, icon: const Icon(Icons.menu)),
         )
       ],

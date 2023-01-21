@@ -1,9 +1,10 @@
-import 'dart:io';
+
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:myoga/services/views/Profile/profile_info_screen.dart';
 import 'package:myoga/services/views/Profile/update_profile_screen.dart';
 import 'package:myoga/services/models/user_model.dart';
 import 'package:provider/provider.dart';
