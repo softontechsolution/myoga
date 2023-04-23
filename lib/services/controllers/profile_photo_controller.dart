@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -16,7 +17,6 @@ import '../models/user_model.dart';
 
 class ProfilePhotoController with ChangeNotifier {
 
-  final _authRepo = Get.put(AuthenticationRepository());
   final _userRepo = Get.put(UserRepository());
 
   final _ref = FirebaseFirestore.instance.collection("Users");
@@ -96,33 +96,63 @@ class ProfilePhotoController with ChangeNotifier {
 
   void uploadImage() async {
     setLoading(true);
+    final user = FirebaseAuth.instance.currentUser!;
+    final phone = user.phoneNumber;
 
-    final email = _authRepo.firebaseUser.value?.email;
-    UserModel userInfo = await _userRepo.getUserDetails(email!);
+    if(phone == null) {
+      final email = user.email;
+      UserModel userInfo = await _userRepo.getUserDetailsWithEmail(email!);
 
-    firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-        .ref('/profilepic${userInfo.id}');
-    firebase_storage.UploadTask uploadTask = ref.putFile(
-        File(image!.path).absolute);
-    await Future.value(uploadTask);
+      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+          .ref('/profilepic${userInfo.id}');
+      firebase_storage.UploadTask uploadTask = ref.putFile(
+          File(image!.path).absolute);
+      await Future.value(uploadTask);
 
-    final newUrl = await ref.getDownloadURL();
-    _ref.doc(userInfo.id).update({"Profile Photo": newUrl}).then((value){
-      Get.snackbar("Success", "Profile Photo Updated",
+      final newUrl = await ref.getDownloadURL();
+      _ref.doc(userInfo.id).update({"Profile Photo": newUrl}).then((value){
+        Get.snackbar("Success", "Profile Photo Updated",
             snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.green.withOpacity(0.1),
+            backgroundColor: Colors.white,
             colorText: Colors.green
         );
-      setLoading(false);
-      _image = null;
-    }).onError((error, stackTrace) {
-      setLoading(false);
-      Get.snackbar("Error", error.toString(),
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.red.withOpacity(0.1),
-          colorText: Colors.red
-      );
-    });
+        setLoading(false);
+        _image = null;
+      }).onError((error, stackTrace) {
+        setLoading(false);
+        Get.snackbar("Error", error.toString(),
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.white,
+            colorText: Colors.red
+        );
+      });
+    }
+    else {
+      UserModel userInfo = await _userRepo.getUserDetailsWithPhone(phone);
 
+      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+          .ref('/profilepic${userInfo.id}');
+      firebase_storage.UploadTask uploadTask = ref.putFile(
+          File(image!.path).absolute);
+      await Future.value(uploadTask);
+
+      final newUrl = await ref.getDownloadURL();
+      _ref.doc(userInfo.id).update({"Profile Photo": newUrl}).then((value){
+        Get.snackbar("Success", "Profile Photo Updated",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.white,
+            colorText: Colors.green
+        );
+        setLoading(false);
+        _image = null;
+      }).onError((error, stackTrace) {
+        setLoading(false);
+        Get.snackbar("Error", error.toString(),
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.white,
+            colorText: Colors.red
+        );
+      });
+    }
   }
 }

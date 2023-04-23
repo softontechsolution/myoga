@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myoga/services/views/Login/phone_login_screen.dart';
 import 'package:myoga/services/views/Signup/signup_screen.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 import 'package:get/get.dart';
 import '../../../constants/colors.dart';
@@ -16,21 +18,22 @@ class LoginFooterWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Text("OR"),
-        const SizedBox(
-          height: 5.0,
-        ),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            icon: const Image(
-              image: AssetImage(moGoogleLogo),
-              width: 20.0,
-            ),
-            onPressed: () {},
-            label: const Text(moGoogleSignIn),
-          ),
-        ),
+        //const Text("OR"),
+        //const SizedBox(
+        //  height: 5.0,
+        //),
+        //SizedBox(
+          //width: double.infinity,
+          //child: OutlinedButton.icon(
+          //  icon: const Icon(LineAwesomeIcons.mobile_phone,
+          //    size: 20.0,
+          //  ),
+          //  onPressed: () {
+          //    Get.to(()=> const PhoneLoginScreen());
+          //  },
+          //  label: const Text(moGoogleSignIn),
+         // ),
+        //),
         const SizedBox(
           height: 5.0,
         ),

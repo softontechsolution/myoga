@@ -30,13 +30,19 @@ class _DropOffLocationScreenState extends State<DropOffLocationScreen> {
   TextEditingController pickUpTextEditingController = TextEditingController();
   List<PlacePredictions> dropOffPlacePredictionList = [];
 
+@override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    dropOffTextEditingController.dispose();
+    pickUpTextEditingController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
     String? placeAddress = Provider.of<AppData>(context).pickUpLocation?.placeName;
-    pickUpTextEditingController.text = placeAddress!;
-
+    pickUpTextEditingController.text = placeAddress ??"";
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -173,7 +179,8 @@ class _DropOffLocationScreenState extends State<DropOffLocationScreen> {
                 BookingAddress bookingAddress = BookingAddress();
                 bookingAddress.pickUpLocation = pickUpTextEditingController.text;
                 bookingAddress.dropOffLocation = dropOffTextEditingController.text;
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const PackageTypeScreen()),);
+                Navigator.pop(context);
+                Get.to(() => const SelectRideScreen());
               },
                   child: Text(moNext.toUpperCase(), style: const TextStyle(fontSize: 20.0,),)
               ),
@@ -277,7 +284,7 @@ class DropOffPredictionTile extends StatelessWidget {
       BookingAddress bookingAddress = BookingAddress();
       bookingAddress.pickUpLocation = pickUpTextEditingController.text;
       bookingAddress.dropOffLocation = dropOffTextEditingController.text;
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const PackageTypeScreen()),);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const SelectRideScreen()),);
     }
   }
 }

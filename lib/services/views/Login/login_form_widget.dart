@@ -9,16 +9,29 @@ import '../Dashboard/dashboard.dart';
 import '../Forget_Password/Forget_Password_Options/forget_password_btn_widget.dart';
 import '../Forget_Password/Forget_Password_Options/forget_password_model_bottom_sheet.dart';
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
   const LoginForm({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Get.put(LoginController());
-    final _formkey = GlobalKey<FormState>();
+  State<LoginForm> createState() => _LoginFormState();
+}
 
+class _LoginFormState extends State<LoginForm> {
+  final controller = Get.put(LoginController());
+  final _formkey = GlobalKey<FormState>();
+  bool _isVisible = false;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    controller.onClose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Form(
       key: _formkey,
       child: Container(
@@ -44,17 +57,21 @@ class LoginForm extends StatelessWidget {
             ),
             const SizedBox(height: 10.0,),
             TextFormField(
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.lock_outlined),
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.lock_outlined),
                 labelText: moPassword,
                 hintText: moPassword,
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
-                  onPressed: null,
-                  icon: Icon(Icons.remove_red_eye_sharp),
+                  onPressed: (){
+                    setState(() {
+                      _isVisible = !_isVisible;
+                    });
+                  },
+                  icon: _isVisible ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off, color: Colors.grey,),
                 ),
               ),
-              obscureText: true,
+              obscureText: !_isVisible,
               validator: (value){
                 if(value == null || value.isEmpty)
                 {
@@ -78,7 +95,15 @@ class LoginForm extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(onPressed: (){
                 if(_formkey.currentState!.validate()){
-                  LoginController.instance.loginUsers(controller.email.text.trim(), controller.password.text.trim());
+                  ///Start Circular Progress Bar
+                  showDialog(
+                      context: context,
+                      builder: (context){
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                  );
+                  controller.loginUsers(controller.email.text.trim(),controller.password.text.trim());
+
                 }
               },
                   child: Text(moLogin.toUpperCase(), style: const TextStyle(fontSize: 20.0,),)

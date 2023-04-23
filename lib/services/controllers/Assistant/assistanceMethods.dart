@@ -15,7 +15,7 @@ class AssistanceMethods {
 
   static Future<String> searchCoordinateAddress(Position position, context) async {
     String streetAddress = "";
-    String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyBnh_SIURwYz-4HuEtvm-0B3AlWt0FKPbM";
+    String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapKay";
 
     var response = await RequestAssistanceController.getRequest(url);
 
@@ -54,15 +54,16 @@ class AssistanceMethods {
     return directionDetails;
   }
 
-  static int calculateFares(DirectionDetails directionDetails){
-    double timeTravelledFares = (directionDetails.durationValue! / 60) * 0.20;
-    double distanceTravelledFares = (directionDetails.distanceValue! / 1000) * 0.20;
+  static int calculateFares(DirectionDetails directionDetails, String? rate){
+    double? intRate = double.tryParse(rate!);
+    double timeTravelledFares = (directionDetails.durationValue! / 60) * intRate!;
+    double distanceTravelledFares = (directionDetails.distanceValue! / 1000) * intRate;
     double totalFare = timeTravelledFares + distanceTravelledFares;
 
     //convert to naira
-    double totalNaira = totalFare * 740;
+    //double totalNaira = totalFare * 740;
 
-    return totalNaira.truncate();
+    return totalFare.truncate();
   }
 
   //static void getCurrentOnlineUserInfo() async {

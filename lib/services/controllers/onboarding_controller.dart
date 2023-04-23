@@ -7,11 +7,11 @@ import '../../constants/image_strings.dart';
 import '../../constants/texts_string.dart';
 import '../models/onboarding_model.dart';
 import '../views/onboarding_screen/onboarding_page_widget.dart';
+import '../views/welcome_screen/welcome_screen.dart';
 
 class OnBoardingController extends GetxController{
-  
-  final controller = LiquidController();
-  RxInt currentPage = 0.obs;
+
+
 
   final pages = [
     OnBoardingPageWidget(
@@ -37,11 +37,5 @@ class OnBoardingController extends GetxController{
     ),
   ];
 
-  onPageChangedCallback(int activePageIndex) => currentPage.value = activePageIndex;
-  skip() => controller.jumpToPage(page: 2);
-  animateToNextSlide() {
-    int nextPage = controller.currentPage + 1;
-    controller.animateToPage(page: nextPage);
-}
 
 }

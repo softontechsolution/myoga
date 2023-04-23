@@ -41,15 +41,6 @@ class ForgetPasswordScreen {
               const SizedBox(
                 height: 10.0,
               ),
-              ForgetPasswordBtnWidget(
-                onTap: () {
-                  Navigator.pop(context);
-                  Get.to(() => const ForgetPasswordPhoneScreen());
-                },
-                btnIcon: Icons.mobile_friendly_outlined,
-                title: moPhone,
-                subtitle: moResetViaPhone,
-              ),
             ],
           ),
         ),

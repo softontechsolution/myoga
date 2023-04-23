@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../constants/image_strings.dart';
 import '../../../../constants/texts_string.dart';
@@ -15,7 +16,6 @@ class OTPScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(SignUpController());
     final otpController = Get.put(OTPController());
     var otp;
     return Scaffold(
@@ -61,9 +61,10 @@ class OTPScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: OtpTimerButton(
-                  onPressed: () {
-                    SignUpController.instance
-                        .phoneAuthentication(controller.phoneNo.text.trim());
+                  onPressed: () async {
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    final phoneNumber = prefs.getString("Phone");
+                    SignUpController.instance.phoneAuthentication(phoneNumber!);
                   },
                   text: const Text('Resend OTP'),
                   duration: 60,

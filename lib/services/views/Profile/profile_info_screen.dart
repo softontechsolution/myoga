@@ -2,17 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:myoga/services/views/Profile/update_profile_screen.dart';
+import 'package:myoga/services/models/user_model.dart';
+import 'package:myoga/services/views/Profile/profile_screen.dart';
+import 'package:provider/provider.dart';
+import '../../controllers/profile_controller.dart';
+import '../../controllers/profile_photo_controller.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/texts_string.dart';
 import '../../../constants/image_strings.dart';
 import '../Forget_Password/Change Password/change_password.dart';
 
-class ProfileInformation extends StatelessWidget {
+class ProfileInformation extends StatefulWidget {
   const ProfileInformation({Key? key}) : super(key: key);
 
   @override
+  State<ProfileInformation> createState() => _ProfileInformationState();
+}
+
+class _ProfileInformationState extends State<ProfileInformation> {
+
+  final _controller = Get.put(ProfileController());
+
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    //_controller.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -30,149 +52,143 @@ class ProfileInformation extends StatelessWidget {
         ],
         backgroundColor: Colors.transparent,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Stack(
-              children: [
-                SizedBox(
-                  width: 120.0,
-                  height: 120.0,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: const Image(image: AssetImage(moProfilePic))),
+      body: ChangeNotifierProvider(
+        create: (_) => ProfilePhotoController(),
+        child: Consumer<ProfilePhotoController>(
+          builder: (context, provider, child){
+            return SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(20.0),
+                child: FutureBuilder(
+                  future: _controller.getUserData(),
+                  builder: (context,  snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done){
+                      if (snapshot.hasData){
+                        UserModel userData = snapshot.data as UserModel;
+                        return Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            Stack(
+                              children: [
+                                SizedBox(
+                                  width: 120.0,
+                                  height: 120.0,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(100),
+                                      child: userData.profilePic == null
+                                          ? const Icon(LineAwesomeIcons.user_circle, size: 35,)
+                                          : Image(image: NetworkImage(userData.profilePic!),
+                                        fit: BoxFit.cover,
+                                        loadingBuilder: (context, child, loadingProgress){
+                                          if(loadingProgress == null) return child;
+                                          return const Center(child: CircularProgressIndicator());
+                                        },
+                                        errorBuilder: (context, object, stack){
+                                          return const Icon(Icons.error_outline, color: Colors.red,);
+                                        },
+                                      ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10.0),
+                            Text(moProfilePics, style: Theme.of(context).textTheme.headline4),
+                            const SizedBox(height: 15.0),
+                            const Divider(),
+                            Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(moProfileInfoHead, style: Theme.of(context).textTheme.bodyText1,),
+                                  ],
+                                ),
+                                const SizedBox(height: 20.0,),
+                                const Divider(),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(moProfileName, style: Theme.of(context).textTheme.headline5,),
+                                    Text(userData.fullname == null ? "Complete profile" : userData.fullname!, style: Theme.of(context).textTheme.bodyText1,),
+                                  ],
+                                ),
+                                const SizedBox(height: 20,),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(moProfileEmail, style: Theme.of(context).textTheme.headline5,),
+                                    Text(userData.email == null ? "Complete profile" : userData.email!, style: Theme.of(context).textTheme.bodyText1,),
+                                  ],
+                                ),
+                                const SizedBox(height: 20,),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(moProfilePhone, style: Theme.of(context).textTheme.headline5,),
+                                    Text(userData.phoneNo == null ? "Complete profile" : userData.phoneNo!,  style: Theme.of(context).textTheme.bodyText1,),
+                                  ],
+                                ),
+                                const SizedBox(height: 20,),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(moProfileAddress, style: Theme.of(context).textTheme.headline5,),
+                                    Text( userData.address == null ? "Complete profile" : userData.address!, style: Theme.of(context).textTheme.bodyText1,),
+                                  ],
+                                ),
+                                const SizedBox(height: 20,),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Date of Birth", style: Theme.of(context).textTheme.headline5,),
+                                    Text( userData.dateOfBirth == null ? "Complete profile" : userData.dateOfBirth!, style: Theme.of(context).textTheme.bodyText1,),
+                                  ],
+                                ),
+                                const SizedBox(height: 20,),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Gender", style: Theme.of(context).textTheme.headline5,),
+                                    Text( userData.gender == null ? "Complete profile" : userData.gender!, style: Theme.of(context).textTheme.bodyText1,),
+                                  ],
+                                ),
+                                const SizedBox(height: 30.0,),
+                                const Divider(),
+                                const SizedBox(height: 30.0,),
+                                TextButton(onPressed: (){
+                                  Get.to(()=> const ChangePasswordScreen());
+                                },
+                                    child: const Text("Change Password", style: TextStyle(color: moAccentColor,fontSize: 20,
+                                        fontWeight: FontWeight.w400),
+                                    )
+                                ),
+                              ],
+                            )
+                          ],
+                        );
+                      }
+                      else if (snapshot.hasError) {
+                        return Center(
+                          child: Text("Profile incomplete: click here to complete profile"),
+                        );
+                      }
+                      else {
+                        return const Center(
+                          child: Text("Something went wrong"),
+                        );
+                      }
+                    }
+                    else {
+                      return const Center(
+                          child: CircularProgressIndicator());
+                    }
+                  }
                 ),
-              ],
-            ),
-            const SizedBox(height: 10.0),
-            Text(moProfilePics, style: Theme.of(context).textTheme.headline4),
-            const SizedBox(height: 15.0),
-            const Divider(),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 14,
               ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(moProfileInfoHead, style: TextStyle(fontSize: 19)),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: const [
-                      Text(moProfileName,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text("John Doe",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w400)),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 22,
-                  ),
-                  Row(
-                    children: const [
-                      Text(moProfileEmail,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text("john@gmail.com",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w400)),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 22,
-                  ),
-                  Row(
-                    children: const [
-                      Text(moProfilePhone,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text("(234) 8123334540",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w400)),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 22,
-                  ),
-                  Row(
-                    children: const [
-                      Text(moProfileDOB,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text("10/10/2001",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w400)),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 22,
-                  ),
-                  Row(
-                    children: const [
-                      Text(moProfileAddress,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text("No.33 Gwari, Abuja",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w400)),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 22,
-                  ),
-                  Row(
-                    children: const [
-                      Text(moProfileGender,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text("Mail",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w400)),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  TextButton(onPressed: (){
-                    Get.to(()=> const ChangePasswordScreen());
-                  },
-                      child: const Text("Change Password", style: TextStyle(color: moAccentColor,fontSize: 20,
-                          fontWeight: FontWeight.w400),
-                      )
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
+            );
+          }
+        )
       ),
     );
   }

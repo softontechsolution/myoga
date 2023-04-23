@@ -19,13 +19,15 @@ class PhoneNumberScreen extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(30.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: const [
                 FormHeaderWidget(
                   image: moWelcomeLogo, imageHeight: 20.0,
                   title: moOtpTitle,
                   subtitle: moPhoneSubTitle,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                 ),
+                SizedBox(height: 20.0,),
                 PhoneNumberFormWidget()
               ],
             ),

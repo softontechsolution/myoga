@@ -14,6 +14,7 @@ const String moWelcomeLogo = "assets/images/myogaIcon3.png";
 //login Screen Image
 const String moGoogleLogo = "assets/icons/google.png";
 const String moLoginImage = "assets/images/myogaIcon1.png";
+const String moLoginImageDark = "assets/images/myogaIcon2.png";
 
 //Banner Images
 const String moBannerOne = "assets/images/banner1.png";

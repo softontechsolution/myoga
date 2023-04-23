@@ -19,24 +19,14 @@ class SignupFormFooter extends StatelessWidget {
             Get.to(()=> const LoginScreen());
           },
           child: Text.rich(
-            TextSpan(children: [
-              TextSpan(
-                  text: moAlreadyHaveAccount,
-                  style: Theme.of(context).textTheme.bodyText1),
-              TextSpan(text: moLogin.toUpperCase()),
-            ]),
-          ),
-        ),
-        const Text("OR"),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            onPressed: () {},
-            icon: const Image(
-              image: AssetImage(moGoogleLogo),
-              width: 20.0,
+            TextSpan(
+                children: [
+                  TextSpan(
+                    text: moAlreadyHaveAccount,
+                    style: Theme.of(context).textTheme.bodyText1),
+                  TextSpan(text: moLogin.toUpperCase()),
+              ]
             ),
-            label: Text(moGoogleSignIn.toUpperCase()),
           ),
         ),
       ],

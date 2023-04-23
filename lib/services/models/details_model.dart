@@ -8,5 +8,4 @@ class PackageModel {
   late String packageWidth;
   late String additionalDetails;
   late String paymentType;
-  late PackageTypeEnum packageType;
 }

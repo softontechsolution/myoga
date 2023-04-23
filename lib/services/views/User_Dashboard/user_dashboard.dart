@@ -1,27 +1,31 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:myoga/services/controllers/Data_handler/appData.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../constants/colors.dart';
-import '../../../constants/image_strings.dart';
-import '../../../constants/texts_string.dart';
-import '../../../repositories/authentication_repository/authentication_repository.dart';
 import '../../../repositories/user_repository/user_repository.dart';
 import '../../../widgets/progressDialog.dart';
 import '../../controllers/Assistant/assistanceMethods.dart';
-import '../../controllers/user_dashboard_controller.dart';
+import 'package:myoga/services/models/user_model.dart';
+import '../../controllers/profile_controller.dart';
+import '../../notifi_services.dart';
 import '../Dashboard/widget/appbar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../Pickup_Location/pickup_location_screen.dart';
+import '../Dropoff_Location/dropoff_location_screen.dart';
+import '../Profile/profile_screen.dart';
 
 
 class UserDashboard extends StatefulWidget {
@@ -39,7 +43,11 @@ class _UserDashboardState extends State<UserDashboard> with TickerProviderStateM
 {
   final Completer<GoogleMapController> _controllerGoogleMap = Completer<GoogleMapController>();
   late GoogleMapController newGoogleMapController;
-  UserRepository userRepo = Get.put(UserRepository());
+  UserRepository _userRepo = Get.put(UserRepository());
+  var myUserDetail = UserModel().obs;
+  ProfileController _controller = Get.put(ProfileController());
+  final _db = FirebaseFirestore.instance;
+  late StreamSubscription<UserModel> _subscription;
 
 
   List<LatLng> pLineCoordinates = [];
@@ -51,6 +59,9 @@ class _UserDashboardState extends State<UserDashboard> with TickerProviderStateM
 
   Set<Marker> markersSet = {};
   Set<Circle> circlesSet = {};
+
+  String? _userID, userPic, userName, userEmail, _token;
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 
   void locatePosition() async {
@@ -94,7 +105,89 @@ class _UserDashboardState extends State<UserDashboard> with TickerProviderStateM
   );
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    NotificationService().requestNotificationPermission();
+    NotificationService().firebaseInit(context);
+    NotificationService().setUpInteractMessage(context);
+    //NotificationService().isTokenRefresh();
+    getToken();
+    _subscription = _controller.getUserDataStream().listen((event) {
+      setState(() {
+        myUserDetail.value = event;
+        savePref();
+      });
+    });
+    /// Stop Progress Bar
+    // ignore: use_build_context_synchronously
+  }
+
+
+  void getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await NotificationService().getDeviceToken().then((token) {
+      if (kDebugMode) {
+        print(" YOUR TOKEN IS: $token");
+      }
+      setState(() {
+        _token = token;
+      });
+      if(_token != prefs.getString("token")){
+        updateToken();
+      }
+      }
+    );
+  }
+
+  void updateToken () async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _userID = prefs.getString("aUserID");
+    if(_userID == null){
+      final userIDd = prefs.getString("userID");
+      await _db.collection("Users").doc(userIDd).update({
+        "Token": _token
+      });
+      prefs.setString("token", _token!);
+    } else {
+      await _db.collection("Users").doc(_userID).update({
+        "Token": _token
+      });
+      prefs.setString("token", _token!);
+    }
+  }
+
+
+  void savePref() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("userName", myUserDetail.value.fullname ?? "");
+    prefs.setString("userEmail", myUserDetail.value.email ?? "");
+    prefs.setString("userPic", myUserDetail.value.profilePic ?? "");
+  }
+
+  void getPref() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      userName = prefs.getString("userName");
+      userPic = prefs.getString("userPic");
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    //timer.cancel();
+    _controller.dispose();
+    _userRepo.dispose();
+    _subscription.cancel();
+    newGoogleMapController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    getPref();
+    var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Scaffold(
       appBar: const DashboardAppBar(),
       body: Stack(
@@ -105,7 +198,7 @@ class _UserDashboardState extends State<UserDashboard> with TickerProviderStateM
             myLocationButtonEnabled: true,
             initialCameraPosition: _kGooglePlex,
             myLocationEnabled: true,
-            zoomControlsEnabled: true,
+            zoomControlsEnabled: false,
             zoomGesturesEnabled: true,
             polylines: polylineSet,
             markers: markersSet,
@@ -116,7 +209,7 @@ class _UserDashboardState extends State<UserDashboard> with TickerProviderStateM
               newGoogleMapController = controller;
 
               setState(() {
-                bottomPaddingOfMap = 320.0;
+                bottomPaddingOfMap = 280.0;
               });
 
               locatePosition();
@@ -129,10 +222,10 @@ class _UserDashboardState extends State<UserDashboard> with TickerProviderStateM
             right: 0.0,
             bottom: 0.0,
             child: Container(
-              height: 320.0,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
+              height: 280.0,
+              decoration: BoxDecoration(
+                color: isDark ? Colors.black87 : Colors.white,
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
@@ -140,22 +233,78 @@ class _UserDashboardState extends State<UserDashboard> with TickerProviderStateM
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 6.0,),
-                    Text("Hi, there", style: Theme.of(context).textTheme.headline6,),
-                    Text("Got any deliveries?", style: Theme.of(context).textTheme.headline4,),
-                    const SizedBox(height: 6.0,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text("Hi, ", style: Theme.of(context).textTheme.headline6, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                                const SizedBox(width: 8.0,),
+                                GestureDetector(
+                                    child: Text(myUserDetail.value.fullname ?? userName ?? "", style: const TextStyle(fontSize: 18.0, color: Colors.blueAccent), maxLines: 1, overflow: TextOverflow.ellipsis,),
+                                    onTap: (){
+                                    Get.to( const ProfileScreen());
+                                    },
+                                ),
+                              ],
+                            ),
+                            Text("Got any deliveries?", style: Theme.of(context).textTheme.headline4, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                          ],
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            Get.to( const ProfileScreen());
+                          },
+                          child: SizedBox(
+                            width: 50.0,
+                            height: 50.0,
+                            child: ClipRRect(
+                                borderRadius:
+                                BorderRadius.circular(100),
+                                child: myUserDetail.value.profilePic == null
+                                    ? Image(image: NetworkImage(userPic ??""), fit: BoxFit.cover, loadingBuilder: (context,
+                                        child, loadingProgress) {if (loadingProgress == null) {
+                                          return child;
+                                        }
+                                        return const Center(child: CircularProgressIndicator());
+                                        },
+                                        errorBuilder:
+                                          (context, object, stack) {
+                                        return Icon(Icons.person, color: isDark ? Colors.white : Colors.grey,);
+                                        },
+                                      )
+                                    : Image(image: NetworkImage(myUserDetail.value.profilePic ??""), fit: BoxFit.cover, loadingBuilder: (context,
+                                        child, loadingProgress) {if (loadingProgress == null) {
+                                          return child;
+                                        }
+                                      return const Center(child: CircularProgressIndicator());
+                                      },
+                                      errorBuilder:
+                                      (context, object, stack) {
+                                        return const Icon(Icons.error_outline, color: Colors.red,);
+                                      },
+                                    )),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10.0,),
                     GestureDetector(
                       onTap: (){
-                        Get.to(() => PickupLocationScreen());
+                        Get.to(() => const DropOffLocationScreen());
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: isDark ? Colors.black87.withOpacity(0.001) : Colors.white,
                           borderRadius: BorderRadius.circular(5.0),
                           boxShadow: const [
                             BoxShadow(
                               color: Colors.black54,
-                              blurRadius: 2.5,
-                              spreadRadius: 0.5,
+                              blurRadius: 1.0,
+                              spreadRadius: 0.01,
                               offset: Offset(0.7, 0.7)
                             ),
                           ],
@@ -163,53 +312,72 @@ class _UserDashboardState extends State<UserDashboard> with TickerProviderStateM
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Row(
-                            children: const [
-                              Icon(LineAwesomeIcons.search, color: moSecondarColor,),
-                              SizedBox(width: 10.0,),
-                              Text("Search Location"),
+                            children: [
+                              const Icon(LineAwesomeIcons.search, color: moSecondarColor,),
+                              const SizedBox(width: 10.0,),
+                              Text("Search Location", style: Theme.of(context).textTheme.headline6, maxLines: 1, overflow: TextOverflow.ellipsis,),
                             ],
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24.0,),
-                    Row(
-                      children: [
-                        const Icon(LineAwesomeIcons.search_location, color: moSecondarColor,),
-                        const SizedBox(width: 12.0,),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text( Provider.of<AppData>(context).pickUpLocation != null
-                              ? Provider.of<AppData>(context).pickUpLocation!.placeName!
-                              : "Add Address", style: Theme.of(context).textTheme.headline6,),
-                            const SizedBox(height: 4.0,),
-                            Text("Your current location address", style: Theme.of(context).textTheme.bodyText1,),
-                          ],
-                        ),
-                      ],
-                    ),
                     const SizedBox(height: 10.0,),
-                    const Divider(
-                      height: 1.0,
-                      color: moPrimaryColor,
-                      thickness: 1.0,
-                    ),
-                    const SizedBox(height: 16.0,),
                     Row(
                       children: [
                         const Icon(LineAwesomeIcons.location_arrow, color: moSecondarColor,),
                         const SizedBox(width: 12.0,),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Add Drop Address", style: Theme.of(context).textTheme.headline6,),
-                            const SizedBox(height: 4.0,),
-                            Text("Your drop-off location address", style: Theme.of(context).textTheme.bodyText1,),
-                          ],
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.all(5.0),
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.black.withOpacity(0.1) : Colors.white,
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Text( Provider.of<AppData>(context).pickUpLocation != null
+                                    ? Provider.of<AppData>(context).pickUpLocation!.placeName!
+                                    : "Your Address", style: Theme.of(context).textTheme.bodyText1, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                                ),
+                                const SizedBox(height: 4.0,),
+                                Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Text("current location address", style: Theme.of(context).textTheme.bodyText2, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
+                        const SizedBox(width: 12.0,),
                       ],
                     ),
+                    const SizedBox(height: 5.0,),
+                    const Divider(
+                      height: 1.0,
+                      color: moSecondarColor,
+                      thickness: 1.0,
+                    ),
+                    const SizedBox(height: 16.0,),
+                    //Row(
+                    //  children: [
+                    //    const Icon(LineAwesomeIcons.location_arrow, color: moSecondarColor,),
+                    //    const SizedBox(width: 12.0,),
+                    //    GestureDetector(
+                    //      onTap: (){ Get.to( const DropOffLocationScreen()); },
+                    //      child: Column(
+                    //        crossAxisAlignment: CrossAxisAlignment.start,
+                    //        children: [
+                    //          Text("Add Drop Address", style: Theme.of(context).textTheme.headline6, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                    //          const SizedBox(height: 4.0,),
+                    //          Text("Your drop-off location address", style: Theme.of(context).textTheme.bodyText1, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                    //        ],
+                    //      ),
+                    //    ),
+                    //  ],
+                    //),
                   ],
                 ),
               ),
@@ -219,7 +387,7 @@ class _UserDashboardState extends State<UserDashboard> with TickerProviderStateM
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.to(const PickupLocationScreen());
+          Get.to(() => const DropOffLocationScreen());
         },
         backgroundColor: PButtonColor,
         elevation: 10.0,
@@ -246,11 +414,14 @@ class _UserDashboardState extends State<UserDashboard> with TickerProviderStateM
 
     Navigator.pop(context);
 
-    print("THIS IS THE ENCODED POINTS");
-    print(details!.encodedPoints);
+    if (kDebugMode) {
+      print("THIS IS THE ENCODED POINTS");
+      print(details!.encodedPoints);
+    }
+
 
     PolylinePoints polylinePoints = PolylinePoints();
-    List<PointLatLng> decodedPolylinePointsResult = polylinePoints.decodePolyline(details.encodedPoints ?? "");
+    List<PointLatLng> decodedPolylinePointsResult = polylinePoints.decodePolyline(details?.encodedPoints ?? "");
 
     pLineCoordinates.clear();
 

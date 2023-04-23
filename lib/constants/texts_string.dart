@@ -31,7 +31,9 @@ const String moEmail = "Email";
 const String moPassword = "Password";
 const String moDontHaveAccount = "Don't have account yet?";
 const String moForgetPassword = "Forget Password";
-const String moGoogleSignIn = "Sign in with Google";
+const String moLoginPhone = "Login with Phone Number";
+const String moLoginPhoneSubtitle = "Enter your registered Phone number to login.";
+const String moGoogleSignIn = "Login with Phone Number";
 
 // Sign Up Screen Text
 const String moSignupTitle = "Get on Board";
@@ -42,13 +44,15 @@ const String moRepeatPassword = "Repeat Password";
 
 // Forget Password Text
 const String moPhone = "Phone";
+const String moPhoneTitle = "Enter your mobile number";
+const String moPhoneHintTitle = "Enter number without the first 0";
 const String moNext = "Next";
 const String moForgetPasswordTitle = "Make Selection!";
 const String moForgetPasswordSubtitle = "Select one of the options given below to reset your password.";
 const String moResetViaEmail = "Reset Via E-Mail Verification.";
 const String moResetViaPhone = "Reset Via Phone Verification.";
 const String moForgetPhoneSubtitle = "Enter your registered Phone number to receive OTP.";
-const String moForgetEmailSubtitle = "Enter your registered Email to receive OTP.";
+const String moForgetEmailSubtitle = "Enter your registered Email to reset password.";
 
 // Forget Password OTP Text
 const String moOtpTitle = "Verification";
@@ -81,7 +85,7 @@ const String moMenu5 = "My Wallet";
 
 //Update Profile Text
 const String moDelete = "Delete";
-const String moJoined = "Joined";
+const String moJoined = "Joined   ";
 const String moJoinAt = "31 January 2023";
 const String moAddress = "Address";
 const String moUpdate = "Update Profile";
@@ -102,7 +106,8 @@ const String moContainer = "Container";
 const String moPackageTitle = "Package Details";
 const String moAddPackageDetails = "Additional Details";
 const String moSelectPackageType = "Select Package Type";
-const String moPackageBox = "Box";
+const String moRideTruck = "Truck";
+const String moRideMotorcycle = "Motorcycle";
 const String moOther = "Other";
 const String moWeight = "Enter Weight in kg";
 const String moHeight = "Enter Height in cm";
@@ -138,6 +143,13 @@ const String moPrice = "Charges: ";
 
 //My Order Screen Text
 const String moMyOrders = "My Bookings";
+
+///Settings Screen Texts
+const String moSetting = "Setting";
+const String moPushNotification = "Push Notification";
+const String moPrivacy = "Privacy Policy";
+const String moTerms = "Terms & Condition";
+const String moAbout = "About Us";
 
 
 

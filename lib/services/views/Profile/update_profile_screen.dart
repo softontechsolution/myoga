@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -10,14 +11,40 @@ import '../../../constants/colors.dart';
 import '../../../constants/texts_string.dart';
 import '../../controllers/profile_controller.dart';
 import '../../controllers/profile_photo_controller.dart';
+import '../welcome_screen/welcome_screen.dart';
 
-class UpdateProfileScreen extends StatelessWidget {
+class UpdateProfileScreen extends StatefulWidget {
   const UpdateProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  State<UpdateProfileScreen> createState() => _UpdateProfileScreenState();
+}
+
+class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
+  late Future userFuture;
+  ProfileController controller = Get.put(ProfileController());
+
+  @override
+  void initState() {
+    super.initState();
+    userFuture = _getUser();
+  }
+
+  _getUser() async {
+    return await controller.getUserData();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    controller.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
-    final controller = Get.put(ProfileController());
+
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -41,7 +68,7 @@ class UpdateProfileScreen extends StatelessWidget {
 
                     ///Future Builder
                     child: FutureBuilder(
-                      future: controller.getUserData(),
+                      future: userFuture,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           if (snapshot.hasData) {
@@ -51,7 +78,11 @@ class UpdateProfileScreen extends StatelessWidget {
                             final email = TextEditingController(text: userData.email);
                             final fullname = TextEditingController(text: userData.fullname);
                             final phone = TextEditingController(text: userData.phoneNo);
-                            var address = TextEditingController(text: userData.address);
+                            final address = TextEditingController(text: userData.address);
+                            final password = TextEditingController(text: userData.password);
+                            final profilePic = TextEditingController(text: userData.profilePic);
+                            final dob = TextEditingController(text: userData.dateOfBirth);
+                            final gender = TextEditingController(text: userData.gender);
 
                             return Column(///Wrap this widget with future builder
                                 children: [
@@ -62,17 +93,18 @@ class UpdateProfileScreen extends StatelessWidget {
                                         height: 120.0,
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(100),
-                                          child: Image(
-                                            image: NetworkImage(userData.profilePic!),
-                                            fit: BoxFit.cover,
-                                            loadingBuilder: (context, child, loadingProgress){
-                                              if(loadingProgress == null) return child;
-                                              return const Center(child: CircularProgressIndicator());
-                                            },
-                                            errorBuilder: (context, object, stack){
-                                              return const Icon(Icons.error_outline, color: Colors.red,);
-                                            },
-                                          ),
+                                          child: userData.profilePic == null
+                                              ? const Icon(LineAwesomeIcons.user_circle, size: 35,)
+                                              : Image(image: NetworkImage(userData.profilePic!),
+                                                fit: BoxFit.cover,
+                                                loadingBuilder: (context, child, loadingProgress){
+                                                  if(loadingProgress == null) return child;
+                                                    return const Center(child: CircularProgressIndicator());
+                                                  },
+                                                errorBuilder: (context, object, stack){
+                                                  return const Icon(Icons.error_outline, color: Colors.red,);
+                                                },
+                                              ),
                                         ),
                                       ),
                                       GestureDetector(
@@ -87,7 +119,7 @@ class UpdateProfileScreen extends StatelessWidget {
                                                 BorderRadius.circular(100),
                                                 color: moSecondarColor),
                                             child: const Icon(LineAwesomeIcons.camera,
-                                                size: 20.0, color: Colors.black)),
+                                                size: 20.0, color: Colors.black, )),
                                       ),
                                     ],
                                   ),
@@ -118,9 +150,6 @@ class UpdateProfileScreen extends StatelessWidget {
                                           ),
                                           const SizedBox(height: 20.0),
                                           TextFormField(
-                                            onChanged: (text){
-                                              address = TextEditingController(text: userData.address);
-                                            },
                                             controller: address,
                                             decoration: const InputDecoration(
                                                 label: Text(moAddress),
@@ -128,6 +157,22 @@ class UpdateProfileScreen extends StatelessWidget {
                                                 Icon(LineAwesomeIcons.address_card)),
                                           ),
                                           const SizedBox(height: 20.0),
+                                          TextFormField(
+                                            controller: dob,
+                                            decoration: const InputDecoration(
+                                                label: Text("Date of Birth"),
+                                                prefixIcon:
+                                                Icon(LineAwesomeIcons.calendar)),
+                                          ),
+                                          const SizedBox(height: 20.0),
+                                          TextFormField(
+                                            controller: gender,
+                                            decoration: const InputDecoration(
+                                                label: Text("Gender"),
+                                                prefixIcon:
+                                                Icon(LineAwesomeIcons.user)),
+                                          ),
+                                          const SizedBox(height: 10.0),
                                           SizedBox(
                                             width: double.infinity,
                                             child: ElevatedButton(
@@ -137,6 +182,10 @@ class UpdateProfileScreen extends StatelessWidget {
                                                   fullname: fullname.text.trim(),
                                                   phoneNo: phone.text.trim(),
                                                   address: address.text.trim(),
+                                                  password: password.text.trim(),
+                                                  profilePic: profilePic.text.trim(),
+                                                  gender: gender.text.trim(),
+                                                  dateOfBirth: dob.text.trim(),
                                                 );
                                                 await controller.updateRecord(userData);
                                                 Get.to(() => const ProfileScreen());
@@ -154,18 +203,22 @@ class UpdateProfileScreen extends StatelessWidget {
                                             mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                             children: [
-                                              const Text.rich(TextSpan(
+                                              Text.rich(
+                                                  TextSpan(
                                                   text: moJoined,
-                                                  style: TextStyle(fontSize: 12),
+                                                  style: const TextStyle(fontSize: 12),
                                                   children: [
                                                     TextSpan(
-                                                        text: moJoinAt,
-                                                        style: TextStyle(
+                                                        text: userData.dateCreated ?? "",
+                                                        style: const TextStyle(
                                                             fontWeight: FontWeight.bold,
                                                             fontSize: 12))
                                                   ])),
                                               ElevatedButton(
-                                                  onPressed: () {},
+                                                  onPressed: () async {
+                                                    await FirebaseAuth.instance.currentUser?.delete();
+                                                    Get.offAll(const WelcomeScreen());
+                                                  },
                                                   style: ElevatedButton.styleFrom(
                                                       backgroundColor:
                                                       Colors.redAccent.withOpacity(0.1),

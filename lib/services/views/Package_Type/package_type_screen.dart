@@ -12,8 +12,6 @@ import '../../models/package_details_model.dart';
 import '../../models/user_model.dart';
 import '../Confirm_Order/confirm_order_screen.dart';
 
-enum PackageTypeEnum { Container, Box, Others }
-
 class PackageTypeScreen extends StatefulWidget {
   const PackageTypeScreen({Key? key}) : super(key: key);
 
@@ -30,15 +28,13 @@ class _PackageTypeScreenState extends State<PackageTypeScreen> {
   final _heightController = TextEditingController();
   final _widthController = TextEditingController();
   final _addController = TextEditingController();
-  PackageTypeEnum? _packageTypeEnum;
 
-  final _paymentMethodList = ["Cash on Delivery", "Wallet", "Bank"];
+  final _paymentMethodList = ["Box", "Container", "Others"];
   String? _selectedVal = "";
 
   final _formKey = GlobalKey<FormState>();
   UserRepository userRepo = Get.put(UserRepository());
   final controller = Get.put(SignUpController());
-  final _authRepo = Get.put(AuthenticationRepository());
 
 
   @override
@@ -165,64 +161,6 @@ class _PackageTypeScreenState extends State<PackageTypeScreen> {
                   const SizedBox(
                     height: 10.0,
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: RadioListTile<PackageTypeEnum>(
-                          contentPadding: const EdgeInsets.all(0.0),
-                          value: PackageTypeEnum.Container,
-                          groupValue: _packageTypeEnum,
-                          dense: true,
-                          tileColor: Colors.deepPurple.shade50,
-                          title: Text(PackageTypeEnum.Container.name),
-                          onChanged: (val) {
-                            setState(() {
-                              _packageTypeEnum = val;
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 5.0,
-                      ),
-                      Expanded(
-                        child: RadioListTile<PackageTypeEnum>(
-                          contentPadding: const EdgeInsets.all(0.0),
-                          value: PackageTypeEnum.Box,
-                          groupValue: _packageTypeEnum,
-                          dense: true,
-                          tileColor: Colors.deepPurple.shade50,
-                          title: Text(PackageTypeEnum.Box.name),
-                          onChanged: (val) {
-                            setState(() {
-                              _packageTypeEnum = val;
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 5.0,
-                      ),
-                      Expanded(
-                        child: RadioListTile<PackageTypeEnum>(
-                          contentPadding: const EdgeInsets.all(0.0),
-                          value: PackageTypeEnum.Others,
-                          groupValue: _packageTypeEnum,
-                          dense: true,
-                          tileColor: Colors.deepPurple.shade50,
-                          title: Text(PackageTypeEnum.Others.name),
-                          onChanged: (val) {
-                            setState(() {
-                              _packageTypeEnum = val;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
                   DropdownButtonFormField(
                     value: _selectedVal,
                     items: _paymentMethodList
@@ -242,7 +180,7 @@ class _PackageTypeScreenState extends State<PackageTypeScreen> {
                     ),
                     dropdownColor: Colors.deepPurple.shade50,
                     decoration: const InputDecoration(
-                      labelText: "Select Payment Method",
+                      labelText: "Select Package Type",
                       prefixIcon: Icon(
                         Icons.wallet,
                         color: Colors.deepPurple,
@@ -263,7 +201,6 @@ class _PackageTypeScreenState extends State<PackageTypeScreen> {
                           packageModel.packageHeight = _heightController.text.trim();
                           packageModel.packageWidth = _widthController.text.trim();
                           packageModel.additionalDetails = _addController.text.trim();
-                          packageModel.packageType = _packageTypeEnum!;
                           packageModel.paymentType = _selectedVal!;
 
                           Navigator.push(context, MaterialPageRoute(builder: (context){

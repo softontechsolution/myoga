@@ -8,26 +8,30 @@ import '../../repositories/user_repository/user_repository.dart';
 import '../models/booking_model.dart';
 import '../models/package_details_model.dart';
 import '../models/user_model.dart';
+import '../notifi_services.dart';
 import '../views/Forget_Password/Forget_Password_Otp/otp_screen.dart';
 import '../views/Phone_Number_Screen/phone_number.dart';
 
 class SignUpController extends GetxController {
   static SignUpController get instance => Get.find();
 
+  // Repo
+  final _auth = Get.put(AuthenticationRepository());
+
   //TextField Controller to get data from TextFields
   final name = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
   final phoneNo = TextEditingController();
-
   final userRepo = Get.put(UserRepository());
 
   // Function to register user using email & password
-  void registerUser(String email, String password) {
-    String? error = AuthenticationRepository.instance.createUserWithEmailAndPassword(email, password) as String?;
-    if(error != null) {
-      Get.showSnackbar(GetSnackBar(message: error.toString()));
-    }
+  Future<void> registerUser(String email, String password) async {
+    await _auth.createUserWithEmailAndPassword(email, password);
+    //String? error = AuthenticationRepository.instance.createUserWithEmailAndPassword(email, password) as String?;
+    //if(error != null) {
+      //Get.showSnackbar(GetSnackBar(message: error.toString()));
+    //}
   }
 
   Future<void> createUser(UserModel user) async {
@@ -35,7 +39,7 @@ class SignUpController extends GetxController {
   }
 
   void phoneAuthentication(String phoneNo){
-    AuthenticationRepository.instance.phoneAuthentication(phoneNo);
+    _auth.phoneAuthentication(phoneNo);
   }
 
   updatePhoneNumber(String phone) async {

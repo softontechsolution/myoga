@@ -19,52 +19,55 @@ class WelcomeScreen extends StatelessWidget {
     final isDarkMode = brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: isDarkMode ? PDarkColor : moPrimaryColor,
-      body: Container(
-        padding: EdgeInsets.all(30.0),
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Image(
-              image: const AssetImage(moWelcomeLogo),
-              height: height * 0.6,
-            ),
-            Column(
-              children: [
-                Text(
-                  moWelcomeTitle,
-                  style: Theme.of(context).textTheme.headline5,
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  moWelcomeSubtitle,
-                  style: Theme.of(context).textTheme.subtitle1,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => Get.to(() => const LoginScreen()),
-                    style: Theme.of(context).outlinedButtonTheme.style,
-                    child: Text(moLogin.toUpperCase()),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(30.0),
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Image(
+                image: const AssetImage(moWelcomeLogo),
+                height: height * 0.6,
+              ),
+              Column(
+                children: [
+                  Text(
+                    moWelcomeTitle,
+                    style: Theme.of(context).textTheme.headline5,
+                    textAlign: TextAlign.center,
                   ),
-                ),
-                const SizedBox(
-                  width: 10.0,
-                ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => Get.to(() => const SignUpScreen()),
-                    style: Theme.of(context).elevatedButtonTheme.style,
-                    child: Text(moSignup.toUpperCase()),
+                  Text(
+                    moWelcomeSubtitle,
+                    style: Theme.of(context).textTheme.subtitle1,
+                    textAlign: TextAlign.center,
                   ),
-                ),
-              ],
-            )
-          ],
+                ],
+              ),
+              const SizedBox(height: 50.0,),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.to(() => const LoginScreen()),
+                      style: Theme.of(context).outlinedButtonTheme.style,
+                      child: Text(moLogin.toUpperCase()),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10.0,
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Get.to(() => const SignUpScreen()),
+                      style: Theme.of(context).elevatedButtonTheme.style,
+                      child: Text(moSignup.toUpperCase()),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

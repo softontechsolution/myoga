@@ -20,6 +20,11 @@ class BookingModel {
   final String? status;
   final String? amount;
   final String? distance;
+  final String? bookingNumber;
+  final String? deliveryMode;
+  final String? rideType;
+  final String? packageType;
+  final Timestamp? timeStamp;
 
   const BookingModel({
     this.id,
@@ -39,6 +44,11 @@ class BookingModel {
     this.status,
     this.amount,
     this.distance,
+    this.bookingNumber,
+    this.deliveryMode,
+    this.rideType,
+    this.packageType,
+    this.timeStamp,
   });
 
   toJson() {
@@ -59,6 +69,11 @@ class BookingModel {
       "Status": status,
       "Amount": amount,
       "Distance": distance,
+      "Booking Number": bookingNumber,
+      "Delivery Mode": deliveryMode,
+      "Ride Type": rideType,
+      "Package Type": packageType,
+      "timeStamp": timeStamp,
     };
   }
 
@@ -88,6 +103,11 @@ class BookingModel {
       status: data["Status"],
       amount: data["Amount"],
       distance: data["Distance"],
+      bookingNumber: data["Booking Number"],
+      deliveryMode: data["Delivery Mode"],
+      rideType: data["Ride Type"],
+      packageType: data["Package Type"],
+      timeStamp: data["timeStamp"],
     );
   }
 

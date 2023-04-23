@@ -27,6 +27,13 @@ class _PickupLocationScreenState extends State<PickupLocationScreen> {
   List<PlacePredictions> placePredictionList = [];
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    pickUpTextEditingController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
 

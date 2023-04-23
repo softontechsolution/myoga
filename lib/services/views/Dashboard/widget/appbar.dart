@@ -14,22 +14,19 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
     return AppBar(
-      leading: const Icon(
-        Icons.notifications,
-        color: Colors.black,
-      ),
-      title: const Image(image: AssetImage(moLoginImage), height: 40.0),
+      title: isDark ? const Image(image: AssetImage(moLoginImageDark), height: 40.2,) : const Image(image: AssetImage(moLoginImage), height: 40.0,),
       centerTitle: true,
       elevation: 0,
-      backgroundColor: Colors.transparent,
+      backgroundColor: isDark ? Colors.black.withOpacity(0.1) : Colors.transparent,
       actions: [
         Container(
-          margin: const EdgeInsets.only(right: 20.0, top: 7.0),
+          margin: const EdgeInsets.only(right: 15.0, top: 5.0),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),),
           child: IconButton(onPressed: () {
-            Get.to(() => ProfileScreen());
+            Get.to(() => const ProfileScreen());
           }, icon: const Icon(Icons.menu)),
         )
       ],

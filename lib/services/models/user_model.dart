@@ -12,6 +12,9 @@ class UserModel {
   final String? profilePic;
   final String? gender;
   final String? dateOfBirth;
+  final String? token;
+  final Timestamp? timeStamp;
+  final String? dateCreated;
 
   const UserModel({
     this.id,
@@ -23,6 +26,9 @@ class UserModel {
     this.profilePic,
     this.gender,
     this.dateOfBirth,
+    this.token,
+    this.timeStamp,
+    this.dateCreated,
   });
 
   toJson() {
@@ -35,6 +41,9 @@ class UserModel {
       "Profile Photo": profilePic,
       "Gender": gender,
       "Date of Birth": dateOfBirth,
+      "Token": token,
+      "timeStamp": timeStamp,
+      "Date Created": dateCreated,
     };
   }
 
@@ -56,6 +65,9 @@ class UserModel {
       profilePic: data["Profile Photo"],
       gender: data["Gender"],
       dateOfBirth: data["Date of Birth"],
+      token: data["Token"],
+      timeStamp: data["timeStamp"],
+      dateCreated: data["Date Created"],
     );
   }
 
